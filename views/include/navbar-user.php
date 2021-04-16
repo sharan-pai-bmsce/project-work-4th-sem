@@ -51,9 +51,9 @@
                   >Guide-lines</a
                 >
               </li>
-              <li class="nav-item <?php if ($path == '/views/index-info.php') {echo ('active');} ?>">
+              <li class="nav-item <?php if ($path == '/views/index-information.php') {echo ('active');} ?>">
                 <a
-                  class="nav-link <?php if ($path == '/views/index-info.php') {echo ('bg-danger pr-2 pl-2');} ?>"
+                  class="nav-link <?php if ($path == '/views/index-information.php') {echo ('bg-danger pr-2 pl-2');} ?>"
                   style="border-radius: 2px"
                   href="../views/index-information.php"
                   >Information</a

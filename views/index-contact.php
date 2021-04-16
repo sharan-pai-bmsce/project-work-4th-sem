@@ -1,6 +1,6 @@
 <?php
   require('include/header.php');
-  $path = 'views/index-contact.php';
+  $path = '/views/index-contact.php';
   $title = 'Contact Us page';
 ?>
     <title>Contact-Us Page</title>
