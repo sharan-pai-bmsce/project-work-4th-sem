@@ -27,6 +27,8 @@
               <option value="Mr.">Mr.</option>
               <option value="Mrs.">Mrs.</option>
               <option value="Ms.">Ms.</option>
+              <option value="Professor">Professor</option>
+              <option value="Asst. Professor">Assistant Professor</option>
             </select>
           </div>
           <div class="col-md-5">
