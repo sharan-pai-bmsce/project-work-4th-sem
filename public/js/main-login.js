@@ -10,7 +10,6 @@ let error = ()=>{
   let password = document.getElementById('password');
   password.value = '';
   username.value = '';
-  console.log("");
 }
 
 let perfect = ()=>{

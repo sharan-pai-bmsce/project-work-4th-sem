@@ -6,6 +6,7 @@
     }
     if (isset($_POST['Logout'])) {
         unset($_SESSION['login_user']);
+        unset($_SESSION['logged_in']);
         session_destroy();
         header('location: ../views/index-login.php');
     }
