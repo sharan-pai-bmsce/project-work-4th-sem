@@ -15,7 +15,9 @@
             <?php echo($title);?>
           </h3>
         </div>
-        <div class="col-3"></div>
+        <div class="col-3 text-right">
+          <a href="../views/index-login.php" class="btn btn-outline-secondary">Admin Login</a>
+        </div>
       </div>
       <div>
         <nav
