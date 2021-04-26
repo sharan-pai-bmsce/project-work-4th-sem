@@ -1,8 +1,11 @@
 <?php
-
+  require('config/database.php');
   require('include/header.php');
   $path = '/views/index-submission.php';
   $title = 'Submission Page';
+  $sql = "SELECT conferenceTitle,discussionTopic FROM announcements;";
+  $query = mysqli_query($conn, $sql);
+  $row = mysqli_fetch_all($query, MYSQLI_ASSOC);
 ?>
     <title>Submission Page</title>
     <link rel="stylesheet" href="../public/css/style-submission.css" />
@@ -13,7 +16,7 @@
     ?>
       <div class="container pl-3 pr-3 pt-2" style="background-color: #eee">
       <div id="msg-div" class="mt-3"></div>
-      <form id="submission-form">
+      <form id="submission-form" action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
         <h3 class="text-center author">Author's Information</h3>
         <hr />
         <br />
@@ -62,10 +65,11 @@
           </div>
         </div>
         <div class="form-row align-items-center pt-3">
+        <div class="col-md-6">
           <label for="conference-name" class="pl-2"
             >Conference Name <span class="text-danger">*</span></label
           >
-          <input
+          <!-- <input
             type="text"
             name="conference-name"
             id="conference-name-input"
@@ -74,7 +78,32 @@
             required
             pattern="[A-Z a-z]{4,}"
             maxlength="80"
-          />
+          /> -->
+          <select name="conference-name" required class="form-control" id="conference-name-input">
+            <?php 
+              echo "<option value=''>Select a Conference Name</option>";
+              foreach($row as $prop=>$val){
+                echo "<option value='$val[conferenceTitle]'> $val[conferenceTitle] </option>";
+              }
+            
+            ?>
+          
+          </select>
+          </div>
+          <div class="col-md-6">
+          <label for="topic-of-discussion" class="pl-2"
+            >Topic of Discussion <span class="text-danger">*</span></label
+          >
+          <select name="topic-of-discussion" required class="form-control" id="discussion-input">
+            <?php 
+              echo "<option value=''>Select a Discussion Topic</option>";
+              foreach ($row as $prop => $val) {
+                echo "<option value='$val[discussionTopic]'> $val[discussionTopic] </option>";
+              }
+            ?>
+          
+          </select>
+        </div>
         </div>
         <div class="form-row align-items-center pt-3">
           <div class="col-md-4">
@@ -237,9 +266,17 @@
           </div>
         </div>
         <div class="text-center col-md-12">
-          <input type="submit" value="Submit" id="submit-btn" class="btn submit-btn btn-outline-dark">
+          <input name="submit" type="submit" value="Submit" id="submit-btn" class="btn submit-btn btn-outline-dark">
         </div>
       </form>
+      <?php
+        if(isset($_POST['submit'])){
+          $stat=0;
+          foreach ($row as $key => $value) {
+            
+          }
+        }
+      ?>
       <div style="padding-bottom: 150px; margin-bottom: 50px;"></div>
     </div>
     <script src="main.js"></script>
