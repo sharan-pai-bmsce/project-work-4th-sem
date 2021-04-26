@@ -5,6 +5,7 @@ require('config/database.php');
 <script src="../public/js/main-login.js"></script>
 <?php
 session_start();
+$_SESSION['Hello'] = 1;
 ?>
 <title>Login Page</title>
 <link rel="stylesheet" href="../public/css/style-login.css" />
@@ -21,18 +22,23 @@ session_start();
           <div class="col-md-7">
             <div class="card-body text-center">
               <h1 style="font-family: fantasy;">Admin Login</h1>
-              <div style="margin:auto;" id='message'></div>
               <p class="login-card-description">Sign into your account</p>
               <div id="login">
                 <div id="login-description" style="justify-content: center; margin:auto;"></div>
                 <form action="<?php $_SERVER['PHP_SELF']; ?>" method="POST" id="form" style="margin: auto">
-                  <div class="form-group">
-                    <label for="username" class="sr-only">Email</label>
+                  <div class="form-group text-left">
+                    <label for="username" class="">Email</label>
                     <input type="username" name="email" id="email" class="form-control" placeholder="E-mail" />
                   </div>
-                  <div class="form-group mb-4">
-                    <label for="password" class="sr-only">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" placeholder="***********" />
+                  <div class="form-group mb-2 text-left">
+                    <label for="password" class="">Password</label>
+                    <input type="password" name="password" id="password" class="form-control" style="margin-bottom:0px;" placeholder="***********" />
+                    <div id="validationServerUsernameFeedback" class="invalid-feedback">
+                        Password and E-mail don't match
+                    </div>
+                  </div>
+                  <div class="text-right mb-4">
+                    <a href="index-forgot-password.php" class="mt-1 link-dark">Forgot Password</a>
                   </div>
                   <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login" />
                 </form>
@@ -41,27 +47,30 @@ session_start();
           </div>
         </div>
       </div>
+      <script>reload()</script>
       <?php
-  if (isset($_POST['login'])) {
-    $username = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-    $sql = "SELECT * FROM admin WHERE email='$username' AND pass='$password';";
-    $query = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-    $count = mysqli_num_rows($query);
-    if ($count == 1) {
-      $_SESSION['logged_in'] = 'YES';
-      $_SESSION['login_user'] = $row['firstName'] . " " . $row['lastName'];
-      echo $_SESSION['logged_in'];
-      echo "<script>perfect(); </script>";
-      header('location: index-admin-home.php');
-    } else {
-      echo "<script> error(); </script>";
-    }
-  }
-  ?>
+      if (isset($_POST['login'])) {
+        $username = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = mysqli_real_escape_string($conn, $_POST['password']);
+        $sql = "SELECT * FROM admin WHERE email='$username' AND pass='$password';";
+        $query = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+        $count = mysqli_num_rows($query);
+        if ($count == 1) {
+          $_SESSION['logged_in'] = 'YES';
+          $_SESSION['login_user'] = $row['firstName'] . " " . $row['lastName'];
+          echo $_SESSION['logged_in'];
+          echo "<script>perfect(); </script>";
+          header('location: index-admin-home.php');
+        } else {
+          echo "<script> error(); </script>";
+        }
+      }
+      ?>
     </div>
   </main>
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
