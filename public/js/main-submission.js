@@ -1,4 +1,26 @@
-class Store{
+let confShow = document.getElementById('conference-show');
+confShow.addEventListener('change',(e)=>{
+    e.preventDefault();
+    let disp = document.getElementById('conf-display');
+    if(disp.style.display=='none'){
+        disp.style.display = 'block';
+    }else{
+        disp.style.display = 'none';
+        window.scrollBy(0,-20);
+    }
+});
+
+let confError = ()=>{
+    document.getElementById('conference-name-input').classList = 'form-control is-invalid';
+    document.getElementById('discussion-input').classList = 'form-control is-invalid';
+    document.getElementById('error-conf').style.display = 'contents';
+}
+
+let success = ()=>{
+    document.getElementById('success').style='display:block;'; 
+}
+
+/*class Store{
     static getUpdate(name){
         let submissions = [];
         if(localStorage.getItem(`${name}`)===null){
@@ -98,4 +120,4 @@ document.getElementById('submission-form').addEventListener('submit',(e)=>{
             div.classList = '';
         },10000);
     }
-});
+});*/
