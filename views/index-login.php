@@ -5,7 +5,6 @@ require('config/database.php');
 <script src="../public/js/main-login.js"></script>
 <?php
 session_start();
-$_SESSION['Hello'] = 1;
 ?>
 <title>Login Page</title>
 <link rel="stylesheet" href="../public/css/style-login.css" />
@@ -38,7 +37,7 @@ $_SESSION['Hello'] = 1;
                     </div>
                   </div>
                   <div class="text-right mb-4">
-                    <a href="index-forgot-password.php" class="mt-1 link-dark">Forgot Password</a>
+                    <a href="index-forgot-password.php" target="_blank" class="mt-1 link-dark">Forgot Password</a>
                   </div>
                   <input name="login" id="login" class="btn btn-block login-btn mb-4" type="submit" value="Login" />
                 </form>
@@ -59,7 +58,7 @@ $_SESSION['Hello'] = 1;
         if ($count == 1) {
           $_SESSION['logged_in'] = 'YES';
           $_SESSION['login_user'] = $row['firstName'] . " " . $row['lastName'];
-          echo $_SESSION['logged_in'];
+          //echo $_SESSION['logged_in'];
           echo "<script>perfect(); </script>";
           header('location: index-admin-home.php');
         } else {
