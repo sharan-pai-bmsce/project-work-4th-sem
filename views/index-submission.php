@@ -15,6 +15,7 @@ $row3 = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $sql = "SELECT name FROM college";
 $query = mysqli_query($conn, $sql);
 $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
+$stat = 0;
 ?>
 <title>Submission Page</title>
 <link rel="stylesheet" href="../public/css/style-submission.css" />
@@ -30,6 +31,20 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
       </div>
     </div>
     <form id="submission-form" action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
+    <script src="../public/js/main-submission.js"></script>
+    <?php
+    if (isset($_POST['submit'])) {
+      foreach ($row1 as $key => $value) {
+        if ($value['conferenceTitle'] == $_POST['conference-name'] && $value['discussionTopic'] == $_POST['topic-of-discussion']) {
+          $stat = 1;
+        }
+      }
+      // echo "$stat    ".$_POST['conference-name']."               ".$_POST['topic-of-discussion'] ;
+      if ($stat == 1) {
+        echo "<script> success(); </script>";
+      }
+    }
+    ?>
       <h3 class="text-center author" style="padding-top: 0px;">Author's Information</h3>
       <hr />
       <br />
@@ -47,11 +62,11 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
         </div>
         <div class="col-md-5">
           <label for="first-name" class="pl-2">First Name <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" name='first-name' id="first-name-input" placeholder="Enter your First Name" required maxlength="50" pattern="[A-Za-z]{1,}" />
+          <input type="text" class="form-control" name='first-name' id="first-name-input" value="<?php if(isset($_POST['first-name'])){if($stat==0)echo($_POST['first-name']);} ?>" placeholder="Enter your First Name" required maxlength="50" pattern="[A-Za-z]{1,}" />
         </div>
         <div class="col-md-5">
           <label for="last-name" class="pl-2">Last Name <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" name="last-name" id="last-name-input" placeholder="Enter your Last Name" required pattern="[A-Za-z]{1,}" maxlength="50" />
+          <input type="text" class="form-control" name="last-name" id="last-name-input" value="<?php if(isset($_POST['last-name'])){if($stat==0)echo $_POST['last-name'];} ?>" placeholder="Enter your Last Name" required pattern="[A-Za-z]{1,}" maxlength="50" />
         </div>
       </div>
       <div class="alert-dark mt-3" id='conf-display' style='display:none;'>
@@ -81,7 +96,12 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
             <?php
             echo "<option value=''>Select a Conference Name</option>";
             foreach ($row1 as $prop => $val) {
-              echo "<option value='$val[conferenceTitle]'> $val[conferenceTitle] </option>";
+              echo("<option");
+              if(isset($_POST['conference-name'])&&$_POST['conference-name']==$val['conferenceTitle']){
+                if($stat==0)
+                  echo " selected='true'";
+              }
+              echo  " value='$val[conferenceTitle]'> $val[conferenceTitle] </option>";
             }
             ?>
           </select>
@@ -92,7 +112,12 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
             <?php
             echo "<option value=''>Select a Discussion Topic</option>";
             foreach ($row1 as $prop => $val) {
-              echo "<option value='$val[discussionTopic]'> $val[discussionTopic] </option>";
+              echo("<option");
+              if(isset($_POST['topic-of-discussion'])&&$_POST['topic-of-discussion']==$val['discussionTopic']){
+                if($stat==0)
+                  echo " selected='true'";
+              }
+              echo  " value='$val[discussionTopic]'> $val[discussionTopic] </option>";
             }
             ?>
           </select>
@@ -101,11 +126,29 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
       <div class="col-md-12 pl-4 pt-2">
         <input type="checkbox" class="form-check-input" id="conference-show"><label for="conference-show">Information regarding on-going conference<span id='error-conf' style="display: none;color:red;">
             <--Entered discussion topic and conference name do not match with any on-going conferences.</span></label>
+          <script>
+            let confShow = document.getElementById('conference-show');
+            confShow.addEventListener('change',(e)=>{
+                e.preventDefault();
+                let disp = document.getElementById('conf-display');
+                if(disp.style.display=='none'){
+                    disp.style.display = 'block';
+                }else{
+                    disp.style.display = 'none';
+                    window.scrollBy(0,-20);
+                }
+            });
+          </script>
       </div>
+      <?php 
+        if(isset($_POST['submit']))
+          if($stat==0)
+            echo "<script>confError();</script>"
+      ?>
       <div class="form-row align-items-center pt-1">
         <div class="col-md-4">
           <label for="Institution" class="pl-2">Institution <span class="text-danger">*</span></label>
-          <input list="institution" id="institution-input" class="form-control" placeholder="Enter the institution" required pattern="[A-Z a-z]{3,}" maxlength="80" >
+          <input list="institution" name='institution' id="institution-input" value="<?php if(isset($_POST['institution'])){if($stat==0)echo $_POST['institution'];} ?>" class="form-control" placeholder="Enter the institution" required pattern="[A-Z a-z]{3,}" maxlength="80" >
           <datalist id="institution">
             <?php
               echo "<option value=''>Select a State</option>";
@@ -123,7 +166,12 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
             <?php
             echo "<option value=''>Select a State</option>";
             foreach ($row3 as $prop => $val) {
-              echo "<option value='$val[name]'> $val[name] </option>";
+              echo("<option");
+              if(isset($_POST['state'])&&$_POST['state']==$val['name']){
+                if($stat==0)
+                  echo " selected='true'";
+              }
+              echo  " value='$val[name]'> $val[name] </option>";
             }
             ?>
           </select>
@@ -135,7 +183,12 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
             <?php
             echo "<option value=''>Select a Country</option>";
             foreach ($row2 as $prop => $val) {
-              echo "<option value='$val[name]'> $val[name] </option>";
+              echo("<option");
+              if(isset($_POST['nationality'])&&$_POST['nationality']==$val['name']){
+                if($stat==0)
+                  echo " selected='true'";
+              }
+              echo  " value='$val[name]'> $val[name] </option>";
             }
             ?>
           </select>
@@ -144,21 +197,21 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
       <div class="form-row align-items-center pt-3">
         <div class="col-md-6">
           <label for="E-mail" class="pl-2">Author's Email Address <span class="text-danger">*</span></label>
-          <input type="email" name="email" class="form-control" id="email-input" placeholder="Enter your email" required pattern="[a-z0-9.]+@[a-z0-9.-]+\.[a-z]{2,}" maxlength="80" />
+          <input type="email" name="email" value="<?php if(isset($_POST['email'])){if($stat==0)echo $_POST['email'];} ?>" class="form-control" id="email-input" placeholder="Enter your email" required pattern="[a-z0-9.]+@[a-z0-9.-]+\.[a-z]{2,}" maxlength="80" />
         </div>
         <div class="col-md-6">
           <label for="Mobile-no" class="pl-2">Mobile No. <span class="text-danger">*</span></label>
-          <input type="text" pattern="[0-9]{10}" maxlength="10" minlength="10" name="mobile-no" id="mobile-input" class="form-control" placeholder="Enter the Mobile No." />
+          <input type="text" pattern="[0-9]{10}" value="<?php if(isset($_POST['mobile-no'])){if($stat==0)echo $_POST['mobile-no'];} ?>" maxlength="10" minlength="10" name="mobile-no" id="mobile-input" class="form-control" placeholder="Enter the Mobile No." />
         </div>
       </div>
       <div class="form-row align-items-center pt-3">
         <div class="col-md-6">
           <label for="Address" class="pl-2">Author's Address <span class="text-danger">*</span></label>
-          <textarea class="form-control" name="address" id="address-input" required="max length exeeded" maxlength="100"></textarea>
+          <textarea class="form-control" name="address" value="<?php if(isset($_POST['address'])){if($stat==0)echo $_POST['address'];} ?>" id="address-input" required="max length exeeded" maxlength="100"><?php if(isset($_POST['address'])&&$stat==0){echo $_POST['address'];} ?></textarea>
         </div>
         <div class="col-md-6">
           <label for="Co-authors" class="pl-2">Co-Authors (if any)</label>
-          <textarea class="form-control" name="Co-authors" id="co-authors-input" placeholder="Enter the Co-author's name"></textarea>
+          <textarea class="form-control" name="Co-authors" value="<?php if(isset($_POST['Co-authors'])){if($stat==0)echo $_POST['Co-authors'];} ?>" id="co-authors-input" placeholder="Enter the Co-author's name"><?php if(isset($_POST['Co-authors'])&&$stat==0){echo $_POST['Co-authors'];} ?></textarea>
         </div>
       </div>
       <h3 class="text-center paper">Paper Information</h3>
@@ -166,16 +219,16 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
       <br />
       <div class="form-row align-items-center">
         <label for="paper-title" class="pl-2">Paper Title <span class="text-danger">*</span></label>
-        <input type="text" name="paper-title" id="paper-title-input" class="form-control" required pattern="[A-Z a-z]{4,}" maxlength="80" />
+        <input type="text" name="paper-title" value="<?php if(isset($_POST['paper-title'])&&$stat==0){echo $_POST['paper-title'];} ?>" id="paper-title-input" class="form-control" required pattern="[A-Z a-z]{4,}" maxlength="80" />
       </div>
       <div class="form-row align-items-center pt-3">
         <label for="paper-abstract" class="pl-2">Paper Abstract <span class="text-danger">*</span></label>
-        <textarea name="paper-abstract" id="paper-abstract-input" class="form-control" style="min-height: 150px" required maxlength="100"></textarea>
+        <textarea name="paper-abstract" value="<?php if(isset($_POST['paper-abstract'])&&$stat==0){echo $_POST['paper-abstract'];} ?>" id="paper-abstract-input" class="form-control" style="min-height: 150px" required maxlength="100"><?php if(isset($_POST['paper-abstract'])&&$stat==0){echo $_POST['paper-abstract'];} ?></textarea>
       </div>
       <div class="form-group pt-3">
         <label for="file-upload">Paper Upload <span class="text-danger">*</span></label>
         <div class="custom-file">
-          <input type="file" name="paper-upload" class="form-control-file" id="paper-upload-input" required accept=".pdf" />
+          <input type="file" name="paper-upload" value="<?php if(isset($_POST['file-upload'])&&$stat==0){echo $_POST['file-upload'];} ?>" class="form-control-file" id="paper-upload-input" required accept=".pdf" />
         </div>
       </div>
       <div class="form-group pt-5">
@@ -196,28 +249,10 @@ $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
         <input name="submit" type="submit" value="Submit" id="submit-btn" class="btn submit-btn btn-outline-dark">
       </div>
     </form>
-    <?php
-    if (isset($_POST['submit'])) {
-      $stat = 0;
-      foreach ($row1 as $key => $value) {
-        if ($value['conferenceTitle'] == $_POST['conference-name'] && $value['discussionTopic'] == $_POST['topic-of-discussion']) {
-          $stat = 1;
-        }
-      }
-      if ($stat == 1) {
-        echo "<script> success(); </script>";
-      } else {
-          echo "<script> confError(); </script>";
-      }
-      mysqli_free_result($query);
-      mysqli_close($conn);
-    }
-    ?>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     <div style="padding-bottom: 150px; margin-bottom: 50px;"></div>
   </div>
-  <script src="../public/js/main-submission.js"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 </body>
 
 </html>

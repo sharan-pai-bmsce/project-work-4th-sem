@@ -1,14 +1,17 @@
-let confShow = document.getElementById('conference-show');
-confShow.addEventListener('change',(e)=>{
-    e.preventDefault();
-    let disp = document.getElementById('conf-display');
-    if(disp.style.display=='none'){
-        disp.style.display = 'block';
-    }else{
-        disp.style.display = 'none';
-        window.scrollBy(0,-20);
-    }
-});
+// document.getElementById('submit-btn').addEventListener('click',(e)=>{
+//     e.preventDefault();
+//     let prefix = document.getElementById('prefix-input');
+//     let firstName = document.getElementById('first-name-input');
+//     let lastName = document.getElementById('last-name-input');
+//     let conferenceName = document.getElementById('conference-name-input');
+//     let discussion = document.getElementById('discussion-input');
+//     let institution = document.getElementById('');
+//     let email = document.getElementById('email-input');
+//     let mobile = document.getElementById('mobile-input');
+//     let paperTitle = document.getElementById('paper-title-input');
+//     let paperAbstract = document.getElementById('paper-abstract-input');
+//     console.log(firstName);
+// });
 
 let confError = ()=>{
     document.getElementById('conference-name-input').classList = 'form-control is-invalid';
@@ -17,6 +20,7 @@ let confError = ()=>{
 }
 
 let success = ()=>{
+    document.getElementById('submission-form').reset();
     document.getElementById('success').style='display:block;'; 
 }
 
