@@ -13,11 +13,24 @@
 //     console.log(firstName);
 // });
 
+let confShow = document.getElementById('conference-show');
+
 let confError = ()=>{
     document.getElementById('conference-name-input').classList = 'form-control is-invalid';
     document.getElementById('discussion-input').classList = 'form-control is-invalid';
     document.getElementById('error-conf').style.display = 'contents';
 }
+
+confShow.addEventListener('change',(e)=>{
+    e.preventDefault();
+    let disp = document.getElementById('conf-display');
+    if(disp.style.display=='none'){
+        disp.style.display = 'block';
+    }else{
+        disp.style.display = 'none';
+        window.scrollBy(0,-20);
+    }
+});
 
 let success = ()=>{
     document.getElementById('submission-form').reset();

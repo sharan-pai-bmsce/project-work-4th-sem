@@ -15,8 +15,14 @@ $row3 = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $sql = "SELECT name FROM college";
 $query = mysqli_query($conn, $sql);
 $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
-$stat = 0;
+$stat=0;
 ?>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script>
+var x = <?php echo(json_encode($row1)); ?>;
+console.log(x);
+</script>
 <title>Submission Page</title>
 <link rel="stylesheet" href="../public/css/style-submission.css" />
 </head>
@@ -31,7 +37,6 @@ $stat = 0;
       </div>
     </div>
     <form id="submission-form" action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
-    <script src="../public/js/main-submission.js"></script>
     <?php
     if (isset($_POST['submit'])) {
       foreach ($row1 as $key => $value) {
@@ -39,10 +44,7 @@ $stat = 0;
           $stat = 1;
         }
       }
-      // echo "$stat    ".$_POST['conference-name']."               ".$_POST['topic-of-discussion'] ;
-      if ($stat == 1) {
-        echo "<script> success(); </script>";
-      }
+      // echo "$stat    ".$_POST['conference-name']."               ".$_POST['topic-of-discussion'] 
     }
     ?>
       <h3 class="text-center author" style="padding-top: 0px;">Author's Information</h3>
@@ -126,25 +128,7 @@ $stat = 0;
       <div class="col-md-12 pl-4 pt-2">
         <input type="checkbox" class="form-check-input" id="conference-show"><label for="conference-show">Information regarding on-going conference<span id='error-conf' style="display: none;color:red;">
             <--Entered discussion topic and conference name do not match with any on-going conferences.</span></label>
-          <script>
-            let confShow = document.getElementById('conference-show');
-            confShow.addEventListener('change',(e)=>{
-                e.preventDefault();
-                let disp = document.getElementById('conf-display');
-                if(disp.style.display=='none'){
-                    disp.style.display = 'block';
-                }else{
-                    disp.style.display = 'none';
-                    window.scrollBy(0,-20);
-                }
-            });
-          </script>
       </div>
-      <?php 
-        if(isset($_POST['submit']))
-          if($stat==0)
-            echo "<script>confError();</script>"
-      ?>
       <div class="form-row align-items-center pt-1">
         <div class="col-md-4">
           <label for="Institution" class="pl-2">Institution <span class="text-danger">*</span></label>
@@ -249,8 +233,19 @@ $stat = 0;
         <input name="submit" type="submit" value="Submit" id="submit-btn" class="btn submit-btn btn-outline-dark">
       </div>
     </form>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="../public/js/main-submission.js"></script>
+    <?php 
+      if(isset($_POST['submit'])){
+        if ($stat == 1) {
+          echo "<script> success(); </script>";
+        }else{
+            echo "<script>confError();</script>";
+        }
+
+
+      }
+
+    ?>
     <div style="padding-bottom: 150px; margin-bottom: 50px;"></div>
   </div>
 </body>
