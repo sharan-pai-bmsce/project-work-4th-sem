@@ -31,6 +31,11 @@ console.log(x);
   require('include/navbar-user.php');
   ?>
   <div class="container pl-3 pr-3 pt-2" style="background-color: #eee">
+  <?php 
+    // var_dump($row4);
+  foreach ($row1 as $key => $value) {
+      var_dump($value['conferenceTitle']);
+  } ?>
     <div id="msg-div" class="mt-3">
       <div class="text-center alert-success pb-3" id='success' style='display:none;'>
         <h3 class="pb-2">Your conference paper has been submitted successfully.</h3> You may get a mail regarding it in 2-3 days. <h3 class="p-2">Thank You!!!</h3>
