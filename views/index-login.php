@@ -172,13 +172,13 @@ session_start();
       if (isset($_POST['user-login'])) {
         $username = mysqli_real_escape_string($conn, $_POST['email-user']);
         $password = mysqli_real_escape_string($conn, $_POST['password-user']);
-        $sql = "SELECT * FROM user WHERE email='$username' AND pass='$password';";
+        $sql = "SELECT * FROM users WHERE email='$username' AND pass='$password';";
         $query = mysqli_query($conn, $sql);
         $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
         $count = mysqli_num_rows($query);
         if ($count == 1) {
           $_SESSION['logged_in'] = 'YES';
-          $_SESSION['login_user'] = $row['firstName'] . " " . $row['lastName'];
+          $_SESSION['login_user'] = $row['first_name'] . " " . $row['last_name'];
           $_SESSION['usn'] = $row['usn'];
           //echo $_SESSION['logged_in'];
           echo "<script>perfect(); </script>";

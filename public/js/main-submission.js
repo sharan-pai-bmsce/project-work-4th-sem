@@ -33,9 +33,21 @@ confShow.addEventListener('change',(e)=>{
 });
 
 let success = ()=>{
-    document.getElementById('submission-form').reset();
     document.getElementById('success').style='display:block;'; 
 }
+
+let fileError = ()=>{
+    document.getElementById('paper-upload-input').classList = 'form-control is-invalid';
+    document.getElementById('file-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,900);
+}
+
+let closeBtn = document.querySelector('#close-btn');
+
+closeBtn.addEventListener('click',(e)=>{
+    let parent = e.target.parentElement.parentElement;
+    parent.style.display = 'none';
+})
 
 /*class Store{
     static getUpdate(name){
