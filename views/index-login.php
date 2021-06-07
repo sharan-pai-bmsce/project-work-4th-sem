@@ -157,10 +157,11 @@ session_start();
         $query = mysqli_query($conn, $sql);
         $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
         $count = mysqli_num_rows($query);
+
         if ($count == 1) {
           $_SESSION['logged_in'] = 'YES';
           $_SESSION['login_reviewer'] = $row['name'];
-          $_SESSION['reviewer_id'] = $row['reviewer_id'];
+          $_SESSION['reviewer_id'] = $row['rid'];
           //echo $_SESSION['logged_in'];
           echo "<script>perfect(); </script>";
           header('location: index-reviewer-home.php');
