@@ -135,7 +135,7 @@ session_start();
       if (isset($_POST['admin-login'])) {
         $username = mysqli_real_escape_string($conn, $_POST['email-admin']);
         $password = mysqli_real_escape_string($conn, $_POST['password-admin']);
-        $sql = "SELECT * FROM admin WHERE email='$username' AND pass='$password';";
+        $sql = "SELECT * FROM organizer WHERE email='$username' AND pass='$password';";
         $query = mysqli_query($conn, $sql);
         $row = mysqli_fetch_array($query, MYSQLI_ASSOC);
         $count = mysqli_num_rows($query);
