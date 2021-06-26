@@ -11,7 +11,7 @@
         header('location: ../views/index-login.php');
     }
     ?>
-    <div class="navbar align-items-center pl-3 pr-3" style="background-color: white">
+    <div class="navbar align-items-center pl-3 pr-3 pb-3" style="background-color: white">
         <div class="col-3 pt-2">
             <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/87/BMS_College_of_Engineering.svg/1200px-BMS_College_of_Engineering.svg.png" width="100px" height="100px" />
         </div>
