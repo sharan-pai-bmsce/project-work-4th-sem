@@ -43,19 +43,19 @@ $stat = 0;
     <form id="submission-form" action="../views/index-submission.php" method="POST" enctype="multipart/form-data">
       <?php
       if (isset($_POST['submit'])) {
-        $confName = test_input($_POST['conference-name']);
-        $topic = test_input($_POST['topic-of-discussion']);
+        $confName = test_input(mysqli_real_escape_string($conn,$_POST['conference-name']));
+        $topic = test_input(mysqli_real_escape_string($conn,$_POST['topic-of-discussion']));
         foreach ($row3 as $key => $value) {
           if ($value['conf_name'] == $confName && $value['topic_of_discussion'] == $topic) {
             $stat = 1;
           }
         }
-        $coAuthor = test_input($_POST['Co-authors']);
-        $paperTitle = test_input($_POST['paper-title']);
-        $paperAbstract = test_input($_POST['paper-abstract']);
-        $usn = test_input($_SESSION['usn']);
+        $coAuthor = test_input(mysqli_real_escape_string($conn,$_POST['Co-authors']));
+        $paperTitle = test_input(mysqli_real_escape_string($conn,$_POST['paper-title']));
+        $paperAbstract = test_input(mysqli_real_escape_string($conn,$_POST['paper-abstract']));
+        $usn = test_input(mysqli_real_escape_string($conn,$_SESSION['usn']));
         // File Upload code still incomplete but this part works.
-        $filename = test_input($_FILES['upload']['name']);
+        $filename = test_input(mysqli_real_escape_string($conn,$_FILES['upload']['name']));
         $temp1 = strtoupper($filename);
         $temp2 = strtoupper($_SESSION['usn'] . "_" . $_POST['topic-of-discussion'] . ".pdf");
         if ($temp1 !== $temp2) {
@@ -136,7 +136,7 @@ $stat = 0;
         <label for="paper-abstract" class="pl-2">Paper Abstract <span class="text-danger">*</span></label>
         <textarea name="paper-abstract" value="<?php if (isset($_POST['paper-abstract']) && $stat == 0 || $stat == 2) {
                                                   echo $_POST['paper-abstract'];
-                                                } ?>" id="paper-abstract-input" class="form-control" style="min-height: 150px" required maxlength="100"><?php if (isset($_POST['paper-abstract']) && ($stat == 0 || $stat == 2)) {
+                                                } ?>" id="paper-abstract-input" class="form-control" style="min-height: 150px" required maxlength="1000"><?php if (isset($_POST['paper-abstract']) && ($stat == 0 || $stat == 2)) {
                                                                                                                                                             echo $_POST['paper-abstract'];
                                                                                                                                                           } ?></textarea>
       </div>
