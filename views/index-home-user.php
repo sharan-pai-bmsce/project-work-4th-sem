@@ -1,4 +1,5 @@
 <?php 
+  require('config/database.php');
   require('include/header.php');
   $path = '/views/index-home-user.php';
   $title = 'Conference Home';
@@ -83,6 +84,12 @@
       <div style="margin-bottom: 200px;"></div>
     </div>
   </section>
+  <?php 
+    $sql = "SELECT a.conf_name,a.topic_of_discussion,a.summary,a.date_of_conf,a.last_date_sub,a.image_url,a.dept,r.name,r.publication_name FROM announcement a,reviewer r where a.rid=r.rid;";
+    $result = mysqli_query($conn,$sql);
+    $row1 = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $json_announcements = json_encode($row1);
+  ?>
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -93,6 +100,9 @@
       integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
       crossorigin="anonymous"
     ></script>
-    <script src="main.js"></script>
+    <script>
+      let announcement = <?php echo "$json_announcements"; ?>
+    </script>
+    <script src="../public/js/main-user-home.js"></script>
   </body>
 </html>
