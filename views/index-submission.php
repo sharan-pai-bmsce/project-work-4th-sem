@@ -13,14 +13,14 @@ $row2 = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $sql = "SELECT conf_name,topic_of_discussion FROM announcement;";
 $query = mysqli_query($conn, $sql);
 $row3 = mysqli_fetch_all($query, MYSQLI_ASSOC);
+$sql = "Select ptitle from submission where usn='$_SESSION[usn]';";
+$query = mysqli_query($conn, $sql);
+$row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
 $stat = 0;
 ?>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-<script>
-  var x = <?php echo (json_encode($row1)); ?>;
-  console.log(x);
-</script>
+
 <title>Submission Page</title>
 <link rel="stylesheet" href="../public/css/style-submission.css" />
 </head>
@@ -33,7 +33,7 @@ $stat = 0;
   <div class="container pl-3 pr-3 pt-2" style="background-color: #eee">
     <div id="msg-div" class="mt-3 mb-3">
       <div class="text-center alert-success pb-3" id='success' style="display: none;" role='alert'>
-      <button type='button' class="btn" id='close-btn' style="float: right;">
+        <button type='button' class="btn" id='close-btn' style="float: right;">
           <span aria-hidden='true'>×</span>
         </button>
         <h3 class="pb-2">Your conference paper has been submitted successfully.</h3> You may get a mail regarding it in 2-3 days. <h3 class="p-2">Thank You!!!</h3>
@@ -43,23 +43,31 @@ $stat = 0;
     <form id="submission-form" action="../views/index-submission.php" method="POST" enctype="multipart/form-data">
       <?php
       if (isset($_POST['submit'])) {
-        $confName = test_input(mysqli_real_escape_string($conn,$_POST['conference-name']));
-        $topic = test_input(mysqli_real_escape_string($conn,$_POST['topic-of-discussion']));
+        $confName = test_input(mysqli_real_escape_string($conn, $_POST['conference-name']));
+        $topic = test_input(mysqli_real_escape_string($conn, $_POST['topic-of-discussion']));
         foreach ($row3 as $key => $value) {
           if ($value['conf_name'] == $confName && $value['topic_of_discussion'] == $topic) {
             $stat = 1;
           }
         }
-        $coAuthor = test_input(mysqli_real_escape_string($conn,$_POST['Co-authors']));
-        $paperTitle = test_input(mysqli_real_escape_string($conn,$_POST['paper-title']));
-        $paperAbstract = test_input(mysqli_real_escape_string($conn,$_POST['paper-abstract']));
-        $usn = test_input(mysqli_real_escape_string($conn,$_SESSION['usn']));
-        // File Upload code still incomplete but this part works.
-        $filename = test_input(mysqli_real_escape_string($conn,$_FILES['upload']['name']));
-        $temp1 = strtoupper($filename);
-        $temp2 = strtoupper($_SESSION['usn'] . "_" . $_POST['topic-of-discussion'] . ".pdf");
-        if ($temp1 !== $temp2) {
-          $stat = 2;
+        if ($stat == 1) {
+          $coAuthor = test_input(mysqli_real_escape_string($conn, $_POST['Co-authors']));
+          $paperTitle = test_input(mysqli_real_escape_string($conn, $_POST['paper-title']));
+          $paperAbstract = test_input(mysqli_real_escape_string($conn, $_POST['paper-abstract']));
+          if ($row4 != null) {
+            foreach ($row4 as $key => $value) {
+              if ($value['ptitle'] === $paperTitle)
+                $stat = 3;
+            }
+          }
+          $usn = test_input(mysqli_real_escape_string($conn, $_SESSION['usn']));
+          // File Upload code still incomplete but this part works.
+          $filename = test_input(mysqli_real_escape_string($conn, $_FILES['upload']['name']));
+          $temp1 = strtoupper($filename);
+          $temp2 = strtoupper($_SESSION['usn'] . "_" . $paperTitle . ".pdf");
+          if ($temp1 !== $temp2) {
+            $stat = 2;
+          }
         }
       }
       // echo "$stat    ".$_POST['conference-name']."               ".$_POST['topic-of-discussion'] 
@@ -86,7 +94,7 @@ $stat = 0;
             foreach ($row1 as $prop => $val) {
               echo ("<option");
               if (isset($_POST['conference-name']) && $_POST['conference-name'] == $val['conf_name']) {
-                if ($stat == 0 || $stat == 2)
+                if ($stat!=1)
                   echo " selected='true'";
               }
               echo  " value='$val[conf_name]'> $val[conf_name] </option>";
@@ -102,7 +110,7 @@ $stat = 0;
             foreach ($row2 as $prop => $val) {
               echo ("<option");
               if (isset($_POST['topic-of-discussion']) && $_POST['topic-of-discussion'] == $val['topic_of_discussion']) {
-                if ($stat == 0 || $stat == 2)
+                if ($stat!=1)
                   echo " selected='true'";
               }
               echo  " value='$val[topic_of_discussion]'> $val[topic_of_discussion] </option>";
@@ -118,32 +126,34 @@ $stat = 0;
       <div class="">
         <label for="Co-authors" class="pl-2">Co-Authors (if any)</label>
         <textarea class="form-control" style="height:120px;" name="Co-authors" value="<?php if (isset($_POST['Co-authors'])) {
-                                                                                        if ($stat == 0 || $stat == 2) echo $_POST['Co-authors'];
-                                                                                      } ?>" id="co-authors-input" placeholder="Enter the Co-author's name"><?php if (isset($_POST['Co-authors']) && $stat == 0 || $stat == 2) {
-                                                                                                                                                                echo $_POST['Co-authors'];
-                                                                                                                                                              } ?></textarea>
+                                                                                        if ($stat!=1) echo $_POST['Co-authors'];
+                                                                                      } ?>" id="co-authors-input" placeholder="Enter the Co-author's name"><?php if (isset($_POST['Co-authors']) && $stat!=1) {
+                                                                                                                                                              echo $_POST['Co-authors'];
+                                                                                                                                                            } ?></textarea>
       </div>
       <h3 class="text-center paper">Paper Information</h3>
       <hr />
       <br />
       <div class="form-row align-items-center">
         <label for="paper-title" class="pl-2">Paper Title <span class="text-danger">*</span></label>
-        <input type="text" name="paper-title" value="<?php if (isset($_POST['paper-title']) && $stat == 0 || $stat == 2) {
+        <input type="text" name="paper-title" value="<?php if (isset($_POST['paper-title']) && $stat!=1) {
                                                         echo $_POST['paper-title'];
                                                       } ?>" id="paper-title-input" class="form-control" required pattern="[A-Z a-z]{4,}" maxlength="80" />
+      <span id='error-ptitle' style="display: none;color:red;">
+            A conference paper of this title has already been submitted by you.</span>
       </div>
       <div class="form-row align-items-center pt-3">
         <label for="paper-abstract" class="pl-2">Paper Abstract <span class="text-danger">*</span></label>
-        <textarea name="paper-abstract" value="<?php if (isset($_POST['paper-abstract']) && $stat == 0 || $stat == 2) {
+        <textarea name="paper-abstract" value="<?php if (isset($_POST['paper-abstract']) && $stat!=1) {
                                                   echo $_POST['paper-abstract'];
-                                                } ?>" id="paper-abstract-input" class="form-control" style="min-height: 150px" required maxlength="1000"><?php if (isset($_POST['paper-abstract']) && ($stat == 0 || $stat == 2)) {
+                                                } ?>" id="paper-abstract-input" class="form-control" style="min-height: 150px" required maxlength="1000"><?php if (isset($_POST['paper-abstract']) && ($stat!=1)) {
                                                                                                                                                             echo $_POST['paper-abstract'];
                                                                                                                                                           } ?></textarea>
       </div>
       <div class="form-group pt-3">
         <label for="file-upload">Paper Upload <span class="text-danger">*</span></label>
         <div class="custom-file">
-          <p style='margin-bottom:5px;'>(Kindly make sure that the file name is in following format 'USN_topic-of-discussion')<span id="file-error" style='display:none;'>
+          <p style='margin-bottom:5px;'>(Kindly make sure that the file name is in following format 'USN_paper-title')<span id="file-error" style='display:none;'>
               <-- You cannot submit if the filename is not in the format.</span>
           </p>
           <input type="file" name="upload" class="form-control-file" id="paper-upload-input" required accept=".pdf" />
@@ -190,7 +200,9 @@ $stat = 0;
         }
       } else if ($stat == 2) {
         echo "<script>fileError();</script>";
-      } else {
+      } else if($stat==3){
+        echo "<script>ptitleError();</script>";
+      }else {
         echo "<script>confError();</script>";
       }
     }
