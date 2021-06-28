@@ -3,8 +3,12 @@ require('config/database.php');
 require('include/header.php');
 $path = '/views/index-reviewer-home.php';
 $title = 'Reviewer Home';
+//$dom=new DOMDocument();
+//$dom->loadHTML('../views/index-reviewer-home.php');
 ?>
-
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="../public/css/style-home-reviewer.css">
 <title>Reviewer Home</title>
 </head>
@@ -14,22 +18,55 @@ $title = 'Reviewer Home';
   require('include/navbar-reviewer.php');
   ?>
   <div class="container">
-      <?php
-        var_dump($_SESSION);
-        $sql = "SELECT conf_name,topic_of_discussion FROM announcement WHERE rid='$_SESSION[reviewer_id]';";
-        echo $sql;
-        $result = mysqli_query($conn,$sql);
-        $row1 = mysqli_fetch_array($result,MYSQLI_ASSOC);
-        $sql = "SELECT * FROM submission where conf_name='$row1[conf_name]' AND topic='$row1[topic_of_discussion]';";
-        echo $sql;
-        $result = mysqli_query($conn,$sql);
-        $row2 = mysqli_fetch_array($result,MYSQLI_ASSOC);
-        var_dump($row2);
-      ?>
-      
+    <?php
+    $sql = "SELECT * FROM submission where (conf_name,topic) IN (SELECT conf_name,topic_of_discussion FROM announcement WHERE rid='$_SESSION[reviewer_id]');";
+    //echo $sql;
+    $result = mysqli_query($conn, $sql);
+    // var_dump(mysqli_num_rows($result));
+    $row2 = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    //print_r($row2);
+    $x = json_encode($row2);
+    ?>
+    <h2 class="text-center"><?php if($row2!=null){echo ($row2[0]['conf_name'] . '--' . $row2[0]['topic']);} ?></h2>
+    <?php
+    foreach ($row2 as $key => $value) {
+      //foreach ($value as $key1 => $value1) {
+      echo "<div class='border border-dark p-3 rounded mb-2'>
+              <h5><b>Paper Id: </b>$value[pid]</h5>
+              <h5><b>Paper Title: </b>$value[ptitle]</h5>
+              <h5><b>Paper Abstract: </b>$value[abstract]</h5>
+              ";
+      if ($value['status'] == 1) {
+        echo "<h5><b>Status: </b>Approved</h5>";
+        echo "<div class='text-center'><a target='_blank' href='./index-user.php?pid=$value[pid]' class='btn btn-primary m-2 col-md-6' style='padding-left:12%;padding-right:12%;' >Expand</a>";
+        echo "</div>
+      </div>";
+      } else {
+        echo "<div class='text-center'>
+              <button id='expand-btn' class='btn btn-primary m-2' style='padding-left:12%;padding-right:12%;'>Expand</button>              
+              </div>            
+            </div>";
+      }
+    }
+    ?>
+    <!-- <a target='_blank' href='./index-user.php?pid=$value[pid]' class='btn btn-primary m-2' style='padding-left:12%;padding-right:12%;' >Expand</a> -->
   </div>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-</body>
+  <?php
+    echo "<script>
+    let expand = document.querySelectorAll('#expand-btn');
+    expand.forEach((ex)=>{ex.addEventListener('click',(e)=>{
+      e.preventDefault();
+      let pid=ex.parentElement.parentElement.children[0].innerText;
+      console.log(pid);
+      pid=pid.slice(9);
+      pid=parseInt(pid);
+      console.log(pid);
+      
+      window.open('./index-user.php?pid='+pid);
+    })});
+  </script>";
+  
 
+  ?>
+</body>
 </html>
