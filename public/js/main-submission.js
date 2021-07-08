@@ -42,6 +42,17 @@ let ptitleError = ()=>{
     window.scrollBy(0,600);
 }
 
+let reportError = ()=>{
+    document.getElementById('report-input').classList = 'form-control is-invalid';
+    document.getElementById('report-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,600);
+}
+let linkError = ()=>{
+    document.getElementById('report-input').classList = 'form-control is-invalid';
+    document.getElementById('link-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,600);
+}
+
 let closeBtn = document.querySelector('#close-btn');
 
 closeBtn.addEventListener('click',(e)=>{

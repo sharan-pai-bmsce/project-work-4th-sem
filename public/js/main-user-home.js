@@ -34,15 +34,20 @@ let removingUpdateOnDates = ()=>{
 removingUpdateOnDates();
 let newsUpdate = store.getUpdates();
 */
+let date = new Date();
 announcement.forEach((ele, index) => {
-  let section = document.createElement("div");
-  section.className = `col-md-3 mb-3 announce`;
-  section.dataset.selection = `${ele.conf_name}--${ele.topic_of_discussion}`;
-  section.innerHTML = `<img src="${ele.image_url}" class="col-md-12 pb-1 announce-img" height="200px" >
+  let last = new Date(`${ele.last_date_sub}`);
+
+  if (date <= last) {
+    let section = document.createElement("div");
+    section.className = `col-md-3 mb-3 announce`;
+    section.dataset.selection = `${ele.conf_name}--${ele.topic_of_discussion}`;
+    section.innerHTML = `<img src="${ele.image_url}" class="col-md-12 pb-1 announce-img" height="200px" >
     <h6 class="pt-1"  style="border-top: 1px solid #aaaaaa;">${ele.conf_name}--${ele.topic_of_discussion}</h6>`;
-  section.style =
-    "padding:0px; border: 1px solid #aaa; border-radius:10px; overflow:hidden; object-fit:cover;";
-  $("#announce-container").append(section);
+    section.style =
+      "padding:0px; border: 1px solid #aaa; border-radius:10px; overflow:hidden; object-fit:cover;";
+    $("#announce-container").append(section);
+  }
 });
 
 let news = document.querySelectorAll("[data-selection]");
@@ -63,10 +68,10 @@ news.forEach((selected) => {
 let announceDisplayFunction = (a) => {
   document.querySelector(
     "#announce-display"
-  ).style = `height:400px; border: 1px solid black;`;
-  document.querySelector("#announce-area").style = `height:400px;`;
+  ).style = `border: 1px solid black;`;
+  document.querySelector("#announce-area").style = ``;
   $("#img-area").html(
-    `<img src="${a.image_url}" class="img-fluid" style="height:400px;">`
+    `<img src="${a.image_url}" class="img-fluid" style='height:inherit;object-fit: contain;'>`
   );
   $("#announce-area").html(`
   <h3 class="pb-3 text-center" id="announce-title">${a.conf_name}</h3>

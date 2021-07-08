@@ -7,7 +7,7 @@ session_start();
 
 <?php
 if (isset($_GET['pid'])) {
-    $sql = "SELECT u.first_name,u.last_name,u.email,u.nationality,u.institution,u.mob_no,u.address,s.pid,s.ptitle,s.abstract,s.conf_name,s.topic,s.co_authors,s.file_name,s.file_size,s.status FROM submission s,users u where s.usn=u.usn AND pid=$_GET[pid];";
+    $sql = "SELECT u.first_name,u.last_name,u.email,u.nationality,u.institution,u.mob_no,u.address,s.pid,s.ptitle,s.abstract,s.conf_name,s.topic,s.co_authors,s.file_name,s.file_size,s.status,s.plag_file,s.plag_percent FROM submission s,users u where s.usn=u.usn AND pid=$_GET[pid];";
     $result = mysqli_query($conn, $sql);
     $row1 = mysqli_fetch_array($result, MYSQLI_ASSOC);
     $sql = "SELECT email FROM reviewer WHERE rid='$_SESSION[reviewer_id]';";
@@ -30,6 +30,8 @@ if (isset($_GET['pid'])) {
         //var_dump($_POST);
         $pid = mysqli_real_escape_string($conn, $row1['pid']);
         $sql = "UPDATE submission SET status=1 where pid=$pid;";
+        $result = mysqli_query($conn, $sql);
+        $sql = "INSERT INTO feedback VALUE ('$row2[email]','$row1[email]','$row1[ptitle]','Your paper has been Accepted','Congratulations!! Your paper has been accepted. It will be presented during the conference. Kindly be there in time. Further info will be given to you through mail.','$row1[conf_name]','$row1[topic]')";
         $result = mysqli_query($conn, $sql);
         if ($result) {
             header("location:index-user.php?pid=$row1[pid]");
@@ -56,9 +58,6 @@ if (isset($_GET['pid'])) {
             exit;
         }
     } ?>
-    <?php
-    if (isset($_POST))
-    ?>
     <div class="container mt-4 p-3" style="background-color: #eee;">
         <?php
     // echo "$sql";
@@ -66,6 +65,7 @@ if (isset($_GET['pid'])) {
     //   echo "<div class></div>";
     //   var_dump($row2);
         ?>
+        
         <div class="form-row pr-4 pl-4">
             <h1 class="text-left col-md-6 pt-4 mt-1" style="font-family: cursive;"><b>Author: </b> <?php echo "$row1[first_name] $row1[last_name]"; ?> </h1>
             <section class="col-md-6">
@@ -92,14 +92,14 @@ if (isset($_GET['pid'])) {
         </div>
         <br>
         <hr>
-        <h4 class="mb-3 pl-3"><b>Paper Id: </b> <?php echo "$row1[pid]"; ?></h4>
-        <div class="form-row mb-3 pl-3 pr-3s">
+        <h4 class="mb-4 mt-4 pl-3"><b>Paper Id: </b> <?php echo "$row1[pid]"; ?></h4>
+        <div class="form-row mt-3 mb-3 pl-3 pr-3">
             <h4 class="col-md-6"><b>Conference Name: </b> <?php echo "$row1[conf_name]"; ?> </h4>
             <h4 class="col-md-6"><b>Topic: </b> <?php echo "$row1[topic]"; ?> </h4>
         </div>
-        <h4 class="mb-3 pl-3"><b>Paper Abstract: </b> <?php echo "$row1[abstract]"; ?></h4>
-        <div class="form-row mb-3 pl-3 pr-3">
-            <h4 class="col-md-6"><b>File: </b><a class="link-dark" href="index-user.php?pid=<?php echo "$row1[pid]"; ?>&&file=<?php echo "$row1[file_name]"; ?>"><?php echo "$row1[file_name]"; ?></a></h4>
+        <h4 class="mb-4 mt-4 pl-3"><b>Paper Abstract: </b> <?php echo "$row1[abstract]"; ?></h4>
+        <div class="form-row mb-4 mt-4 pl-3 pr-3s">
+            <h4 class="col-md-6"><b>Plagiarism Percentage: </b> <?php echo "$row1[plag_percent]"; ?> </h4>
             <?php
             if ($row1['status'] == 0) {
                 echo "<h4 class='col-md-6'><b>Approval Status: </b>Not yet Approved</h4>";
@@ -108,6 +108,11 @@ if (isset($_GET['pid'])) {
             }
             ?>
 
+        </div>
+        
+        <div class="form-row mb-4 mt-4 pl-3 pr-3">
+            <h4 class="col-md-6"><b>File: </b><a class="link-dark" href="index-user.php?pid=<?php echo "$row1[pid]"; ?>&&file=<?php echo "$row1[file_name]"; ?>"><?php echo "$row1[file_name]"; ?></a></h4>
+            <h4 class="col-md-6"><b>Plagiarism Report: </b><a class="link-dark" href="index-user.php?pid=<?php echo "$row1[pid]"; ?>&&file=<?php echo "$row1[plag_file]"; ?>"><?php echo "$row1[plag_file]"; ?></a></h4>
         </div>
         <br>
         <hr>
@@ -143,8 +148,12 @@ if (isset($_GET['pid'])) {
                             <h3 name="ptitle" class="form-control" style="background-color:#eee;" id="ptitle"><?php echo "$row1[ptitle]" ?></h3>
                         </div>
                         <div class="form-group">
-                            <label for="conference">Conference:</label>
-                            <h3 name="conf" class="form-control" style="background-color:#eee;" id="conf"><?php echo "$row1[conf_name]-$row1[topic]" ?></h3>
+                            <label for="conference">Conference Name:</label>
+                            <h3 name="conf" class="form-control" style="background-color:#eee;" id="conf"><?php echo "$row1[conf_name]" ?></h3>
+                        </div>
+                        <div class="form-group">
+                            <label for="conference">Topic of discussion:</label>
+                            <h3 name="conf" class="form-control" style="background-color:#eee;" id="conf"><?php echo "$row1[topic]" ?></h3>
                         </div>
                         <div class="form-group">
                             <label for="Subject">Subject:</label>
