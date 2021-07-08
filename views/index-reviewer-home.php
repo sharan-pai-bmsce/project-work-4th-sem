@@ -19,40 +19,45 @@ $title = 'Reviewer Home';
   ?>
   <div class="container">
     <?php
-    $sql = "SELECT * FROM submission where (conf_name,topic) IN (SELECT conf_name,topic_of_discussion FROM announcement WHERE rid='$_SESSION[reviewer_id]');";
-    //echo $sql;
+    $sql = "SELECT conf_name,topic_of_discussion FROM announcement WHERE rid='$_SESSION[reviewer_id]';";
     $result = mysqli_query($conn, $sql);
-    // var_dump(mysqli_num_rows($result));
+    $row1 = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $sql = "SELECT conf_name,topic,pid,ptitle,abstract,status FROM submission where (conf_name,topic) IN (SELECT conf_name,topic_of_discussion FROM announcement WHERE rid='$_SESSION[reviewer_id]');";
+    $result = mysqli_query($conn, $sql);
     $row2 = mysqli_fetch_all($result, MYSQLI_ASSOC);
     //print_r($row2);
     $x = json_encode($row2);
     ?>
-    <h2 class="text-center"><?php if($row2!=null){echo ($row2[0]['conf_name'] . '--' . $row2[0]['topic']);} ?></h2>
     <?php
-    foreach ($row2 as $key => $value) {
-      //foreach ($value as $key1 => $value1) {
-      echo "<div class='border border-dark p-3 rounded mb-2'>
-              <h5><b>Paper Id: </b>$value[pid]</h5>
-              <h5><b>Paper Title: </b>$value[ptitle]</h5>
-              <h5><b>Paper Abstract: </b>$value[abstract]</h5>
-              ";
-      if ($value['status'] == 1) {
-        echo "<h5><b>Status: </b>Approved</h5>";
-        echo "<div class='text-center'><a target='_blank' href='./index-user.php?pid=$value[pid]' class='btn btn-primary m-2 col-md-6' style='padding-left:12%;padding-right:12%;' >Expand</a>";
-        echo "</div>
-      </div>";
-      } else {
-        echo "<div class='text-center'>
-              <button id='expand-btn' class='btn btn-primary m-2' style='padding-left:12%;padding-right:12%;'>Expand</button>              
-              </div>            
-            </div>";
+    foreach ($row1 as $key1 => $value1) {
+      echo "<h2 class='text-center pt-3 pb-3'>$value1[conf_name] --  $value1[topic_of_discussion]</h2>";
+      foreach ($row2 as $key => $value) {
+        if ($value['conf_name'] == $value1['conf_name'] && $value1['topic_of_discussion'] == $value['topic']) {
+          echo "<div class='border border-dark p-3 rounded mb-2'>
+                <h5><b>Paper Id: </b>$value[pid]</h5>
+                <h5><b>Paper Title: </b>$value[ptitle]</h5>
+                <h5><b>Paper Abstract: </b>$value[abstract]</h5>
+                ";
+          if ($value['status'] == 1) {
+            echo "<h5><b>Status: </b>Approved</h5>";
+            echo "<div class='text-center'><a target='_blank' href='./index-user.php?pid=$value[pid]' class='btn btn-primary m-2 col-md-6' style='padding-left:12%;padding-right:12%;' >Expand</a>";
+            echo "</div>
+        </div>";
+          } else {
+            echo "<div class='text-center'>
+                <button id='expand-btn' class='btn btn-primary m-2' style='padding-left:12%;padding-right:12%;'>Expand</button>              
+                </div>            
+              </div>";
+          }
+        }
       }
     }
+
     ?>
     <!-- <a target='_blank' href='./index-user.php?pid=$value[pid]' class='btn btn-primary m-2' style='padding-left:12%;padding-right:12%;' >Expand</a> -->
   </div>
   <?php
-    echo "<script>
+  echo "<script>
     let expand = document.querySelectorAll('#expand-btn');
     expand.forEach((ex)=>{ex.addEventListener('click',(e)=>{
       e.preventDefault();
@@ -65,8 +70,9 @@ $title = 'Reviewer Home';
       window.open('./index-user.php?pid='+pid);
     })});
   </script>";
-  
+
 
   ?>
 </body>
+
 </html>
