@@ -34,26 +34,24 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav">
-                    <li class="nav-item <?php if ($path == '/views/index-admin-submission.php') {
+                    <li class="nav-item <?php if ($path == '/views/index-admin-registration.php') {
                                             echo ('active');
                                         } ?>">
                         <a class="nav-link <?php if ($path == '/views/index-admin-home.php') {
                                                 echo ('bg-danger pr-2 pl-2');
-                                            } ?>" style="border-radius: 2px" href="../views/index-admin-home.php">Home</a>
+                                            } ?>" style="border-radius: 2px" href="../views/index-admin-home.php">HOME</a>
                     </li>
-                    <li class="nav-item <?php if ($path == '/views/index-admin-submission.php') {
+                    <li class="nav-item <?php if ($path == '/views/index-admin-registration.php') {
                                             echo ('active');
                                         } ?>">
-                        <a class="nav-link <?php if ($path == '/views/index-admin-submission.php') {
+                        <a class="nav-link <?php if ($path == '/views/index-admin-registration.php') {
                                                 echo ('bg-danger pr-2 pl-2');
-                                            } ?>" style="border-radius: 2px" href="../views/index-admin-submission.php">Submissions</a>
+                                            } ?>" style="border-radius: 2px" href="../views/index-admin-registration.php">REVIEWER REGISTRATION</a>
                     </li>
-                    <li class="nav-item <?php if ($path == '/views/index-admin-submission.php') {
+                    <li class="nav-item <?php if ($path == '/views/index-admin-registration.php') {
                                             echo ('active');
                                         } ?>">
-                        <a class="nav-link <?php if ($path == '/views/index-admin-contact.php') {
-                                                echo ('bg-danger pr-2 pl-2');
-                                            } ?>" style="border-radius: 2px" href="../views/index-admin-contact.php">Contact</a>
+                      
                     </li>
                 </ul>
             </div>
