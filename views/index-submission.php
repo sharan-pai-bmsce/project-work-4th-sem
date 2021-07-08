@@ -1,4 +1,5 @@
 <?php
+// include("../views/vendor/autoload.php");
 require('config/database.php');
 require('include/header.php');
 $path = '/views/index-submission.php';
@@ -46,8 +47,13 @@ $stat = 0;
         $confName = test_input(mysqli_real_escape_string($conn, $_POST['conference-name']));
         $topic = test_input(mysqli_real_escape_string($conn, $_POST['topic-of-discussion']));
         foreach ($row3 as $key => $value) {
-          if ($value['conf_name'] == $confName && $value['topic_of_discussion'] == $topic) {
-            $stat = 1;
+
+          // echo "$confName, $topic";
+          if ($value['conf_name'] === $confName) {
+            if($value['topic_of_discussion'] === $topic){
+              echo "world";
+              $stat = 1;
+            }
           }
         }
         if ($stat == 1) {
@@ -62,14 +68,48 @@ $stat = 0;
           }
           $usn = test_input(mysqli_real_escape_string($conn, $_SESSION['usn']));
           // File Upload code still incomplete but this part works.
-          $filename = test_input(mysqli_real_escape_string($conn, $_FILES['upload']['name']));
+          $filename = test_input(mysqli_real_escape_string($conn, $_FILES['upload']['name'][0]));
           $temp1 = strtoupper($filename);
           $temp2 = strtoupper($_SESSION['usn'] . "_" . $paperTitle . ".pdf");
           if ($temp1 !== $temp2) {
             $stat = 2;
           }
+          $filename1 = test_input(mysqli_real_escape_string($conn, $_FILES['upload']['name'][1]));
+          $temp1r = strtoupper($filename1);
+          $temp2r = strtoupper($_SESSION['usn'] . "_" . $paperTitle . " plagiarism report.pdf");
+          if ($temp1r !== $temp2r) {
+            $stat = 4;
+          }
+
+          if ($stat === 1) {
+            $destination = 'Uploads/' . $filename;
+            $extension = pathinfo($filename, PATHINFO_EXTENSION);
+            $file = $_FILES['upload']['tmp_name'][0];
+            $filesize = $_FILES['upload']['size'][0];
+
+            $destination1 = 'Uploads/' . $filename1;
+
+            $extension = pathinfo($filename1, PATHINFO_EXTENSION);
+            $file1 = $_FILES['upload']['tmp_name'][1];
+
+            move_uploaded_file($file1, $destination1);
+            include('vendor/autoload.php');
+            $parser = new \Smalot\PdfParser\Parser();
+            $pdf = $parser->parseFile($destination1);
+            $text = $pdf->getText();
+            // echo $text;
+            if (strpos($text, "P la gia ris m")) {
+              $x = substr($text, strpos($text, "P la gia ris m") - 7, 5);
+            } else if (strpos($text, "R EP O RT")) {
+              $x = substr($text, strpos($text, "R EP O RT") + 13, 7);
+            } else {
+              $stat = 5;
+            }
+          }
         }
+        echo $stat;
       }
+     
       // echo "$stat    ".$_POST['conference-name']."               ".$_POST['topic-of-discussion'] 
       ?>
       <h3 class="text-center author" style="padding-top: 0px;">Author's Information</h3>
@@ -92,9 +132,10 @@ $stat = 0;
             <?php
             echo "<option value=''>Select a Conference Name</option>";
             foreach ($row1 as $prop => $val) {
+              
               echo ("<option");
               if (isset($_POST['conference-name']) && $_POST['conference-name'] == $val['conf_name']) {
-                if ($stat!=1)
+                if ($stat != 1)
                   echo " selected='true'";
               }
               echo  " value='$val[conf_name]'> $val[conf_name] </option>";
@@ -110,7 +151,7 @@ $stat = 0;
             foreach ($row2 as $prop => $val) {
               echo ("<option");
               if (isset($_POST['topic-of-discussion']) && $_POST['topic-of-discussion'] == $val['topic_of_discussion']) {
-                if ($stat!=1)
+                if ($stat != 1)
                   echo " selected='true'";
               }
               echo  " value='$val[topic_of_discussion]'> $val[topic_of_discussion] </option>";
@@ -126,8 +167,8 @@ $stat = 0;
       <div class="">
         <label for="Co-authors" class="pl-2">Co-Authors (if any)</label>
         <textarea class="form-control" style="height:120px;" name="Co-authors" value="<?php if (isset($_POST['Co-authors'])) {
-                                                                                        if ($stat!=1) echo $_POST['Co-authors'];
-                                                                                      } ?>" id="co-authors-input" placeholder="Enter the Co-author's name"><?php if (isset($_POST['Co-authors']) && $stat!=1) {
+                                                                                        if ($stat != 1) echo $_POST['Co-authors'];
+                                                                                      } ?>" id="co-authors-input" placeholder="Enter the Co-author's name"><?php if (isset($_POST['Co-authors']) && $stat != 1) {
                                                                                                                                                               echo $_POST['Co-authors'];
                                                                                                                                                             } ?></textarea>
       </div>
@@ -136,17 +177,17 @@ $stat = 0;
       <br />
       <div class="form-row align-items-center">
         <label for="paper-title" class="pl-2">Paper Title <span class="text-danger">*</span></label>
-        <input type="text" name="paper-title" value="<?php if (isset($_POST['paper-title']) && $stat!=1) {
+        <input type="text" name="paper-title" value="<?php if (isset($_POST['paper-title']) && $stat != 1) {
                                                         echo $_POST['paper-title'];
                                                       } ?>" id="paper-title-input" class="form-control" required pattern="[A-Z a-z]{4,}" maxlength="80" />
-      <span id='error-ptitle' style="display: none;color:red;">
-            A conference paper of this title has already been submitted by you.</span>
+        <span id='error-ptitle' style="display: none;color:red;">
+          A conference paper of this title has already been submitted by you.</span>
       </div>
       <div class="form-row align-items-center pt-3">
         <label for="paper-abstract" class="pl-2">Paper Abstract <span class="text-danger">*</span></label>
-        <textarea name="paper-abstract" value="<?php if (isset($_POST['paper-abstract']) && $stat!=1) {
+        <textarea name="paper-abstract" value="<?php if (isset($_POST['paper-abstract']) && $stat != 1) {
                                                   echo $_POST['paper-abstract'];
-                                                } ?>" id="paper-abstract-input" class="form-control" style="min-height: 150px" required maxlength="1000"><?php if (isset($_POST['paper-abstract']) && ($stat!=1)) {
+                                                } ?>" id="paper-abstract-input" class="form-control" style="min-height: 150px" required maxlength="1000"><?php if (isset($_POST['paper-abstract']) && ($stat != 1)) {
                                                                                                                                                             echo $_POST['paper-abstract'];
                                                                                                                                                           } ?></textarea>
       </div>
@@ -156,7 +197,22 @@ $stat = 0;
           <p style='margin-bottom:5px;'>(Kindly make sure that the file name is in following format 'USN_paper-title')<span id="file-error" style='display:none;'>
               <-- You cannot submit if the filename is not in the format.</span>
           </p>
-          <input type="file" name="upload" class="form-control-file" id="paper-upload-input" required accept=".pdf" />
+          <input type="file" name="upload[]" class="form-control-file" id="paper-upload-input" multiple='multiple' required accept=".pdf" />
+        </div>
+      </div>
+      <div class="form-group pt-3">
+
+        <label for="file-upload">Plagiarism report upload <span class="text-danger">*</span></label>
+        <div class="custom-file">
+          <p style='margin-bottom:5px;'>(Kindly make sure that the file name is in following format 'USN_ptitle plagiarism report')<span id="report-error" style='display:none;'>
+              <-- You cannot submit if the filename is not in the format.</span><span id='link-error' style='display:none;'> Kindly upload the report generated by anyone of the 2 above links for plagiarism check.</span>
+          </p>
+          <div class="pb-3">
+            <b class="p-3 pl-1">Links you can use:</b>
+            <a href="https://www.duplichecker.com/" class="link-dark pr-3" target="blank">1. Duplichecker</a>
+            <a href="https://smallseotools.com/plagiarism-checker/" class="link-dark pl-3" target="blank">2. Small SE Tools</a>
+          </div>
+          <input type="file" name="upload[]" class="form-control-file" id="report-input" multiple='multiple' required accept=".pdf" />
         </div>
       </div>
       <div class="form-group pt-5">
@@ -177,6 +233,7 @@ $stat = 0;
         <input name="submit" type="submit" value="Submit" id="submit-btn" class="btn submit-btn btn-outline-dark">
       </div>
     </form>
+
     <script src="../public/js/main-submission.js"></script>
     <?php
     //var_dump($_SESSION);
@@ -189,20 +246,28 @@ $stat = 0;
     }
     if (isset($_POST['submit'])) {
       if ($stat == 1) {
-        $destination = 'Uploads/' . $filename;
-        $extension = pathinfo($filename, PATHINFO_EXTENSION);
-        $file = $_FILES['upload']['tmp_name'];
-        $filesize = $_FILES['upload']['size'];
-        $sql = "INSERT INTO submission(usn,conf_name,topic,co_authors,ptitle,abstract,file_name,file_size) VALUES ('$usn','$confName','$topic','$coAuthor','$paperTitle','$paperAbstract','$filename',$filesize);";
+        $x = str_replace(" ", "", $x);
+        $x = str_replace("\t", "", $x);
+        $x = str_replace("\n", "", $x);
+
+        $sql = "INSERT INTO submission(usn,conf_name,topic,co_authors,ptitle,abstract,file_name,file_size,plag_percent,plag_file) VALUES ('$usn','$confName','$topic','$coAuthor','$paperTitle','$paperAbstract','$filename',$filesize,'$x','$filename1');";
+        echo "$sql";
         if (move_uploaded_file($file, $destination)) {
           if (mysqli_query($conn, $sql))
             echo "<script> success(); </script>";
         }
+        // } else {
+        // }
       } else if ($stat == 2) {
         echo "<script>fileError();</script>";
-      } else if($stat==3){
+      } else if ($stat == 3) {
         echo "<script>ptitleError();</script>";
-      }else {
+      } else if ($stat == 4) {
+        echo "<script>reportError();</script>";
+      } else if ($stat == 5) {
+        echo "<script>linkError();</script>";
+      } else {
+        
         echo "<script>confError();</script>";
       }
     }
