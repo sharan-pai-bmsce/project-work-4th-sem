@@ -1,4 +1,72 @@
-class Store{
+// document.getElementById('submit-btn').addEventListener('click',(e)=>{
+//     e.preventDefault();
+//     let prefix = document.getElementById('prefix-input');
+//     let firstName = document.getElementById('first-name-input');
+//     let lastName = document.getElementById('last-name-input');
+//     let conferenceName = document.getElementById('conference-name-input');
+//     let discussion = document.getElementById('discussion-input');
+//     let institution = document.getElementById('');
+//     let email = document.getElementById('email-input');
+//     let mobile = document.getElementById('mobile-input');
+//     let paperTitle = document.getElementById('paper-title-input');
+//     let paperAbstract = document.getElementById('paper-abstract-input');
+//     console.log(firstName);
+// });
+
+let confShow = document.getElementById('conference-show');
+
+let confError = ()=>{
+    document.getElementById('conference-name-input').classList = 'form-control is-invalid';
+    document.getElementById('discussion-input').classList = 'form-control is-invalid';
+    document.getElementById('error-conf').style.display = 'contents';
+}
+
+confShow.addEventListener('change',(e)=>{
+    e.preventDefault();
+    let disp = document.getElementById('conf-display');
+    if(disp.style.display=='none'){
+        disp.style.display = 'block';
+    }else{
+        disp.style.display = 'none';
+        window.scrollBy(0,-20);
+    }
+});
+
+let success = ()=>{
+    document.getElementById('success').style='display:block;'; 
+}
+
+let ptitleError = ()=>{
+    document.getElementById('paper-title-input').classList = 'form-control is-invalid';
+    document.getElementById('error-ptitle').style = 'display: contents; color:red;';
+    window.scrollBy(0,600);
+}
+
+let reportError = ()=>{
+    document.getElementById('report-input').classList = 'form-control is-invalid';
+    document.getElementById('report-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,600);
+}
+let linkError = ()=>{
+    document.getElementById('report-input').classList = 'form-control is-invalid';
+    document.getElementById('link-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,600);
+}
+
+let closeBtn = document.querySelector('#close-btn');
+
+closeBtn.addEventListener('click',(e)=>{
+    let parent = e.target.parentElement.parentElement;
+    parent.style.display = 'none';
+})
+
+let fileError = ()=>{
+    document.getElementById('paper-upload-input').classList = 'form-control is-invalid';
+    document.getElementById('file-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,900);
+}
+
+/*class Store{
     static getUpdate(name){
         let submissions = [];
         if(localStorage.getItem(`${name}`)===null){
@@ -98,4 +166,4 @@ document.getElementById('submission-form').addEventListener('submit',(e)=>{
             div.classList = '';
         },10000);
     }
-});
+});*/
