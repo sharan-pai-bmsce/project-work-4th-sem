@@ -44,13 +44,13 @@ $stat = 0;
     <form id="submission-form" action="../views/index-submission.php" method="POST" enctype="multipart/form-data">
       <?php
       if (isset($_POST['submit'])) {
-        $confName = test_input(mysqli_real_escape_string($conn, $_POST['conference-name']));
-        $topic = test_input(mysqli_real_escape_string($conn, $_POST['topic-of-discussion']));
+        $confName = mysqli_real_escape_string($conn, $_POST['conference-name']);
+        $topic = mysqli_real_escape_string($conn, $_POST['topic-of-discussion']);
         foreach ($row3 as $key => $value) {
-
-          // echo "$confName, $topic";
-          if ($value['conf_name'] === $confName) {
-            if($value['topic_of_discussion'] === $topic){
+          echo "$value[conf_name], $value[topic_of_discussion]";
+          echo "$confName, $topic";
+          if ($value['conf_name'] == $confName) {
+            if($value['topic_of_discussion'] == $topic){
               echo "world";
               $stat = 1;
             }

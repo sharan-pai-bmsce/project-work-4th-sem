@@ -13,7 +13,7 @@ $email=mysqli_real_escape_string($conn,$_POST['email']);
 $publication_name=mysqli_real_escape_string($conn,$_POST['publication_name']);
 $password=mysqli_real_escape_string($conn,$_POST['password']);
 
-$query="INSERT INTO `reviewer`(`rid`,`name`,`email`,`password`,`publication_name`,`registered_by`) Values('$RID','$Name','$email','$password','$publication_name','$registered_by')";
+$query="INSERT INTO `reviewer`(`rid`,`name`,`email`,`pass`,`publication_name`,`registered_by`) Values('$RID','$Name','$email','$password','$publication_name','$registered_by')";
 $stat=0;
 if(mysqli_query($conn,$query))
 { $stat=1;
@@ -71,7 +71,7 @@ if(mysqli_query($conn,$query))
                         pattern="[a-z A-Z]{2,}"
                       />
                     </div>
-                    <label for="registered_by" class="ml-2">Registered By<span style="color: red; margin-left: 1mm;">*</span></label>
+                    <label for="registered_by" class="ml-2">Registering Dept<span style="color: red; margin-left: 1mm;">*</span></label>
                       <input
                         type="text"
                         name="registered_by"
@@ -109,7 +109,6 @@ if(mysqli_query($conn,$query))
                       <input
                         type="password"
                         id="password"
-                        name="password"
                         class="form-control"
                         placeholder="Enter the new password"
                         required
@@ -121,6 +120,7 @@ if(mysqli_query($conn,$query))
                       <label for="password" class="ml-2">Password Verification<span style="color: red; margin-left: 1mm;">*</span></label>
                       <input
                         type="password"
+                        name='password'
                         id="password-confirm"
                         class="form-control"
                         placeholder="Re-enter the new password"
@@ -147,7 +147,7 @@ if(mysqli_query($conn,$query))
             </div>
           </div>
         </div>
-      
+        <?php //echo 'error'.mysqli_error($conn); ?>
     </main>
     
   </body>

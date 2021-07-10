@@ -25,7 +25,7 @@ $title = 'Reviewer Home';
     $sql = "SELECT conf_name,topic,pid,ptitle,abstract,status FROM submission where (conf_name,topic) IN (SELECT conf_name,topic_of_discussion FROM announcement WHERE rid='$_SESSION[reviewer_id]');";
     $result = mysqli_query($conn, $sql);
     $row2 = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    //print_r($row2);
+    print_r($row2);
     $x = json_encode($row2);
     ?>
     <?php
