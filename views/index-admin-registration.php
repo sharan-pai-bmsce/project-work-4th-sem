@@ -42,10 +42,8 @@ if(mysqli_query($conn,$query))
                   <?php
                
                   if(isset($_POST['SUBMIT'])&&($stat==1))
-                  echo "alert";
-                    // inside "div ele"..... create a msg to pop up to show its registered
-                  // else not registered
-                  ?>
+                  echo "<p><font color=red>Registered Successfully</font></p>";
+                     ?>
                   <form method ="POST" action="<?php $_SERVER['PHP_SELF'];?>" class="text-left" style="margin: auto" id="user-form">
                     <div class="form-group">
                       <label for="RID" class="ml-2">RID<span style="color: red; margin-left: 1mm;">*</span></label>
