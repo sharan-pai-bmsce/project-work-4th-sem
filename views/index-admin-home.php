@@ -120,14 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
   }
 }
 else{
-  $conf_name = $_POST["conf_name"];
-  $topic_of_discussion = $_POST["topic_of_discussion"];
-  $last_date_sub = $_POST["last_date_sub"];
-  $date_of_conf = $_POST["date_of_conf"];
-  $summary = $_POST["summary"];
-  $image_url = $_POST["image_url"];
-  $rid = $_POST["rid"];
-  $dept = $_POST["dept"];
+  $conf_name = mysqli_real_escape_string($conn,$_POST["conf_name"]);
+  $topic_of_discussion = mysqli_real_escape_string($conn,$_POST["topic_of_discussion"]);
+  $last_date_sub = mysqli_real_escape_string($conn,$_POST["last_date_sub"]);
+  $date_of_conf = mysqli_real_escape_string($conn,$_POST["date_of_conf"]);
+  $summary = mysqli_real_escape_string($conn,$_POST["summary"]);
+  $image_url = mysqli_real_escape_string($conn,$_POST["image_url"]);
+  $rid = mysqli_real_escape_string($conn,$_POST["rid"]);
+  $dept = mysqli_real_escape_string($conn,$_POST["dept"]);
   $sql = "INSERT INTO `announcement` (`conf_name`, `topic_of_discussion` , `summary`, `date_of_conf`, `last_date_sub`, `image_url`, `rid`, `dept`) VALUES ('$conf_name', '$topic_of_discussion' ,'$summary', '$date_of_conf', '$last_date_sub', '$image_url', '$rid', '$dept')";
   $result = mysqli_query($conn, $sql);
   if ($result) {
