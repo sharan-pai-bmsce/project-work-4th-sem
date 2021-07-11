@@ -115,7 +115,7 @@ session_start();
                       <a href="index-forgot-password.php" target="_blank" class="mt-1 link-dark">Forgot Password</a>
                     </span>
                     <span class="pl-5 text-right">
-                      <a href="index-forgot-password.php" class="mt-1 link-dark">Register Here</a>
+                      <a href="index-sign-up.php" class="mt-1 link-dark">Register Here</a>
                     </span>
                   </div>
 
