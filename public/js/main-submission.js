@@ -33,8 +33,37 @@ confShow.addEventListener('change',(e)=>{
 });
 
 let success = ()=>{
-    document.getElementById('submission-form').reset();
     document.getElementById('success').style='display:block;'; 
+}
+
+let ptitleError = ()=>{
+    document.getElementById('paper-title-input').classList = 'form-control is-invalid';
+    document.getElementById('error-ptitle').style = 'display: contents; color:red;';
+    window.scrollBy(0,600);
+}
+
+let reportError = ()=>{
+    document.getElementById('report-input').classList = 'form-control is-invalid';
+    document.getElementById('report-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,600);
+}
+let linkError = ()=>{
+    document.getElementById('report-input').classList = 'form-control is-invalid';
+    document.getElementById('link-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,600);
+}
+
+let closeBtn = document.querySelector('#close-btn');
+
+closeBtn.addEventListener('click',(e)=>{
+    let parent = e.target.parentElement.parentElement;
+    parent.style.display = 'none';
+})
+
+let fileError = ()=>{
+    document.getElementById('paper-upload-input').classList = 'form-control is-invalid';
+    document.getElementById('file-error').style = 'display: contents; color:red;';
+    window.scrollBy(0,900);
 }
 
 /*class Store{

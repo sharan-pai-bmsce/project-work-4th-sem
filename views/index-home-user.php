@@ -1,4 +1,5 @@
 <?php 
+  require('config/database.php');
   require('include/header.php');
   $path = '/views/index-home-user.php';
   $title = 'Conference Home';
@@ -72,7 +73,7 @@
     <h1 class="h-primary center">Updates</h1>
     <div id="update">
       <div style="margin-bottom: 50px;"></div>
-      <div class="announce-display row no-gutters" id="announce-display">
+      <div class="announce-display row" id="announce-display">
           <div id="img-area" class="col-md-5" style="padding-left:0px;"></div>
           <div id="announce-area" class="announce-area col-md-7 p-2"></div>
       </div>
@@ -83,6 +84,27 @@
       <div style="margin-bottom: 200px;"></div>
     </div>
   </section>
+  
+  <?php 
+    $date = date('Y-m-d');
+    $sql = "SELECT file_name,plag_file from submission WHERE (conf_name,topic) in (SELECT conf_name,topic_of_discussion FROM announcement where date_of_conf<'$date');";
+    echo $sql;
+    $result = mysqli_query($conn,$sql);
+    $row = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    foreach ($row as $key => $value) {
+      echo "Deleted $value[file_name]";
+      unlink('Uploads/'.$value['file_name']);
+      unlink('Uploads/'.$value['plag_file']);
+      echo "Deleted $value[plag_file]";
+    }
+    $sql = "DELETE from announcement where date_of_conf<'$date'";
+    echo $sql;
+    $result = mysqli_query($conn,$sql);
+    $sql = "SELECT a.conf_name,a.topic_of_discussion,a.summary,a.date_of_conf,a.last_date_sub,a.image_url,a.dept,r.name,r.publication_name FROM announcement a,reviewer r where a.rid=r.rid;";
+    $result = mysqli_query($conn,$sql);
+    $row1 = mysqli_fetch_all($result,MYSQLI_ASSOC);
+    $json_announcements = json_encode($row1);
+  ?>
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -93,6 +115,9 @@
       integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
       crossorigin="anonymous"
     ></script>
-    <script src="main.js"></script>
+    <script>
+      let announcement = <?php echo "$json_announcements"; ?>
+    </script>
+    <script src="../public/js/main-user-home.js"></script>
   </body>
 </html>
