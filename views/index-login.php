@@ -112,7 +112,7 @@ session_start();
                   </div>
                   <div class="mb-4">
                     <span class="pr-5 text-left">
-                      <a href="index-forgot-password.php" target="_blank" class="mt-1 link-dark">Forgot Password</a>
+                      <a href="" id='forgot-pass' class="mt-1 link-dark">Forgot Password</a>
                     </span>
                     <span class="pl-5 text-right">
                       <a href="index-sign-up.php" class="mt-1 link-dark">Register Here</a>
@@ -142,6 +142,7 @@ session_start();
         if ($count == 1) {
           $_SESSION['logged_in'] = 'YES';
           $_SESSION['login_admin'] = $row['firstName'] . " " . $row['lastName'];
+          $_SESSION['admin_dept'] = $row['dept'];
           //echo $_SESSION['logged_in'];
           echo "<script>perfect(); </script>";
           header('location: index-admin-home.php');
@@ -191,6 +192,12 @@ session_start();
       ?>
     </div>
   </main>
+  <script>
+    let forgot = document.getElementById('forgot-pass');
+    forgot.addEventListener('click',(e)=>{
+      window.open('./index-forgot-password.php');
+    })
+  </script>
   <!-- JavaScript Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
