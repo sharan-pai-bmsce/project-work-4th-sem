@@ -16,7 +16,7 @@ require('config/database.php')
 <body style="background-color: white">
   <?php
   require('include/navbar-admin.php');
-  $sql = "SELECT rid,name,email FROM reviewer WHERE registering_dept='$_SESSION[admin_dept]' AND rid NOT IN (SELECT rid FROM announcement GROUP BY rid HAVING count(*)>=2);";
+  $sql = "SELECT rid,name,email,registering_dept FROM reviewer WHERE registering_dept='$_SESSION[admin_dept]' AND rid NOT IN (SELECT rid FROM announcement GROUP BY rid HAVING count(*)>=2);";
   $result = mysqli_query($conn, $sql);
   $row12 = mysqli_fetch_all($result, MYSQLI_ASSOC);
   ?>
@@ -95,7 +95,7 @@ require('config/database.php')
         $conf_name = urldecode($_GET['conf']);
         $topic_of_discussion = urldecode($_GET['topic']);
         $delete = true;
-        $sql = "SELECT file_name,plag_file from submission WHERE conf_name='$conf_name' AND topic='$topic_of_discussion';";
+        $sql = "SELECT email,file_name,plag_file from users u,submission s WHERE u.usn=s.usn AND conf_name='$conf_name' AND topic='$topic_of_discussion';";
         // echo $sql;
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -105,6 +105,9 @@ require('config/database.php')
           unlink('Uploads/' . $value['file_name']);
           unlink('Uploads/' . $value['plag_file']);
           echo "Deleted $value[plag_file]";
+          $msg="$conf_name has been canceled due to some unfortunate reasons. Sorry that your conference paper couldn't be presented. But we suggest you keep looking into the news and announcements for future conferences.\nThank you.\nYours Sincerely\n$_SESSION[login_admin]\n$_SESSION[admin_dept]";
+          $msg=wordwrap($msg,100);
+          mail($value['email'],"Cancelation of $conf_name-$topic_of_discussion",$msg);
         }
         $sql = "DELETE FROM `announcement` WHERE `conf_name` = '$conf_name' and `topic_of_discussion`='$topic_of_discussion'";
         $result = mysqli_query($conn, $sql);
@@ -142,10 +145,26 @@ require('config/database.php')
           $image_url = mysqli_real_escape_string($conn, $_POST["image_url"]);
           $rid = mysqli_real_escape_string($conn, $_POST["rid"]);
           $dept = mysqli_real_escape_string($conn, $_POST["dept"]);
-          $sql = "INSERT INTO `announcement` (`conf_name`, `topic_of_discussion` , `summary`, `date_of_conf`, `last_date_sub`, `image_url`, `rid`, `dept`) VALUES ('$conf_name', '$topic_of_discussion' ,'$summary', '$date_of_conf', '$last_date_sub', '$image_url', '$rid', '$dept')";
-          $result = mysqli_query($conn, $sql);
-          if ($result) {
-            $insert = true;
+          $last = strtotime($last_date_sub);
+          $conf = strtotime($date_of_conf);
+          $stat=0;
+          foreach ($row12 as $key => $value) {
+            if($value['rid']==$rid){
+              $stat=1;
+            }
+          }
+          
+          if ($conf > $last&&$stat==1) {
+            $sql = "INSERT INTO `announcement` (`conf_name`, `topic_of_discussion` , `summary`, `date_of_conf`, `last_date_sub`, `image_url`, `rid`, `dept`) VALUES ('$conf_name', '$topic_of_discussion' ,'$summary', '$date_of_conf', '$last_date_sub', '$image_url', '$rid', '$dept')";
+            $result = mysqli_query($conn, $sql);
+            if ($result) {
+              $insert = true;
+            }else{
+              $error = mysqli_error($conn);
+              echo $error;
+            }
+          }else{
+            $insert = false;
           }
         }
       }
@@ -153,13 +172,23 @@ require('config/database.php')
       <div class="news">
         <h1 class="text-center">News And Announcement</h1>
         <?php
-        if ($insert) {
-          echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-    <strong>Success!</strong> Your record has been inserted successfully
-    <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-      <span aria-hidden='true'>×</span>
-    </button>
-  </div>";
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+          if ($insert) {
+            echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+      <strong>Success!</strong> Your record has been inserted successfully
+      <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+        <span aria-hidden='true'>×</span>
+      </button>
+    </div>";
+          }else{
+            echo "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+      <strong>Error!</strong> You might have made some error in reviewer id or the dates.
+      <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+        <span aria-hidden='true'>×</span>
+      </button>
+    </div>";
+          }
+          echo "<script>window.scrollBy(0,1500);</script>";
         }
         ?>
 
@@ -179,13 +208,13 @@ require('config/database.php')
             <label for="heading" class="pl-1">
               <h5>Title:</h5>
             </label>
-            <input type="text" class="form-control" name="conf_name" id="conf_name" />
+            <input type="text" class="form-control" name="conf_name" id="conf_name" value="<?php if(isset($_POST['conf_name'])&&!$insert) echo $_POST['conf_name']; ?>"/>
           </div>
           <div class="form-group">
             <label for="heading" class="pl-1">
               <h5>Topic Of Discussion:</h5>
             </label>
-            <input type="text" class="form-control" name="topic_of_discussion" id="topic_of_discussion" />
+            <input type="text" class="form-control" name="topic_of_discussion" id="topic_of_discussion" value="<?php if(isset($_POST['topic_of_discussion'])&&!$insert) echo $_POST['topic_of_discussion']; ?>"/>
           </div>
           <div class="alert-dark mt-1" id='conf-display' style="display: none;">
             <?php
@@ -202,7 +231,7 @@ require('config/database.php')
             <label for="heading" class="pl-1">
               <h5>Reviewer's ID:</h5>
             </label>
-            <input type="text" class="form-control" name="rid" id="rid" />
+            <input type="text" class="form-control" name="rid" id="rid" value="<?php if(isset($_POST['rid'])&&!$insert) echo $_POST['rid']; ?>" />
             <div class="form-check pt-2">
               <input type="checkbox" class="form-check-input" id="rid-show"><span> Click to see the list of reviewers available</span>
             </div>
@@ -211,31 +240,31 @@ require('config/database.php')
             <label for="heading" class="pl-1">
               <h5>Department:</h5>
             </label>
-            <input type="text" class="form-control" name="dept" id="dept" value="<?php echo $_SESSION['admin_dept']; ?>" />
+            <input type="text" class="form-control" name="dept" id="dept" value="<?php if(isset($_POST['dept'])&&!$insert) echo $_POST['dept']; else echo $_SESSION['admin_dept']; ?>" />
           </div>
           <div class="form-group">
             <label for="heading" class="pl-1">
               <h5>Last Date Of Submission:</h5>
             </label>
-            <input type="date" class="form-control" name="last_date_sub" id="last_date_sub" />
+            <input type="date" class="form-control" name="last_date_sub" id="last_date_sub" value="<?php if(isset($_POST['last_date_sub'])&&!$insert) echo $_POST['last_date_sub']; ?>"/>
           </div>
           <div class="form-group">
             <label for="heading" class="pl-1">
               <h5>Conference Date:</h5>
             </label>
-            <input type="date" class="form-control" name="date_of_conf" id="date-of_conf" />
+            <input type="date" class="form-control" name="date_of_conf" id="date-of_conf" value="<?php if(isset($_POST['date_of_conf'])&&!$insert) echo $_POST['date_of_conf']; ?>"/>
           </div>
           <div class="form-row">
             <label for="heading" class="pl-1">
               <h5>Summary:</h5>
             </label>
-            <textarea class="form-control" style="min-height: 150px" name="summary" id="summary"></textarea>
+            <textarea class="form-control" style="min-height: 150px" name="summary" id="summary"><?php if(isset($_POST['summary'])&&!$insert) echo $_POST['summary']; ?></textarea>
           </div>
           <div class="form-group">
             <label for="heading" class="pl-1">
               <h5>Link for image:</h5>
             </label>
-            <input type="text" class="form-control" name="image_url" id="image_url" />
+            <input type="text" class="form-control" name="image_url" id="image_url" value="<?php if(isset($_POST['image_url'])&&!$insert) echo $_POST['image_url']; ?>"/>
           </div>
           <div class="text-center">
             <input type="submit" class="btn btn-dark" style="margin: auto; width: 50%" id="submit" value="submit" />
@@ -391,7 +420,7 @@ require('config/database.php')
           $('#editModal').modal('toggle');
         })
       })
-      
+
       deletes = document.getElementsByClassName('delete');
       Array.from(deletes).forEach((element) => {
         element.addEventListener("click", (e) => {
