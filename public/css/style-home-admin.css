@@ -92,7 +92,9 @@ html {
 
 .news {
   background-color: #f6f5f4;
-  height: 833px;
+  /* height: 1000px;  */
+  padding-left: 40px;
+  padding-right: 40px;
 }
 .text-center {
   text-align: center;

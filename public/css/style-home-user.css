@@ -1,61 +1,59 @@
 /* CSS Reset */
-*{
+* {
   margin: 0;
   padding: 0;
 }
 
-html{
+html {
   scroll-behavior: smooth;
 }
 
-
 /* CSS Variables */
-:root{
+:root {
   --navbar-height: 59px;
 }
 
-
-
 /* Home Section */
-#home{
+#home {
   display: flex;
   flex-direction: column;
-  padding:3px 200px;
+  padding: 3px 200px;
   height: 500px;
   justify-content: center;
   align-items: center;
 }
 
-#home::before{ 
+#home::before {
   content: "";
   position: absolute;
-  background: url('https://eddanicolson.files.wordpress.com/2019/07/shutterstock_1162081681.jpg') no-repeat center center/cover;
+  background: url("https://eddanicolson.files.wordpress.com/2019/07/shutterstock_1162081681.jpg")
+    no-repeat center center/cover;
   height: 600px;
-  top:0px;
-  left:0px;
+  top: 0px;
+  left: 0px;
   width: 100%;
   z-index: -1;
-  opacity:0.89;
+  opacity: 0.89;
 }
 
-#home h1{
-  color:rgb(231, 227, 227);
+#home h1 {
+  color: rgb(231, 227, 227);
   text-align: center;
-  font-family: 'Bree Serif', serif;
+  font-family: "Bree Serif", serif;
 }
 
-#home h2{
-  color:rgb(253, 253, 253);
+#home h2 {
+  color: rgb(253, 253, 253);
   text-align: center;
   font-size: 1.5rem;
-  font-family: 'Bree Serif', serif;
+  font-family: "Bree Serif", serif;
 }
 /* Services Section */
-#mission{
+#mission {
   margin: 34px;
   display: flex;
 }
-#mission .box{ 
+#mission .box {
   border: 2px solid white;
   padding: 34px;
   margin: auto;
@@ -65,31 +63,30 @@ html{
   margin-bottom: 20px;
 }
 
-#mission .box img{ 
- height: 160px;
- margin: auto;
- display: block;
+#mission .box img {
+  height: 160px;
+  margin: auto;
+  display: block;
 }
 
-#mission .box p{
-  font-family: 'Bree Serif', serif;
-
-} 
+#mission .box p {
+  font-family: "Bree Serif", serif;
+}
 
 /* Utility Classes */
-.h-primary{
-  font-family: 'Bree Serif', serif;
+.h-primary {
+  font-family: "Bree Serif", serif;
   font-size: 3.8rem;
   padding: 12px;
 }
 
-.h-secondary{
-  font-family: 'Bree Serif', serif;
+.h-secondary {
+  font-family: "Bree Serif", serif;
   font-size: 2.3rem;
   padding: 12px;
 }
 
-.center{
+.center {
   text-align: center;
 }
 
@@ -111,19 +108,17 @@ html{
   }
 }
 
-.announce-img{
-  padding:0px;
-  
+.announce-img {
+  padding: 0px;
 }
 
-#announce-title{
+#announce-title {
   text-transform: capitalize;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
 }
 
-#announce-summary{
+#announce-summary {
   text-align: justify;
-  
 }
 
 .nav-link {
@@ -145,9 +140,15 @@ html{
   top: 105px;
   width: 100%;
 }
-#home::before,#home{
+#home::before,
+#home {
   margin-top: 160px;
 }
-.container{
+.container {
   margin-top: 100px;
+}
+
+body {
+  background-color: #07a6c2;
+  background-image: url("https://www.transparenttextures.com/patterns/60-lines.png");
 }
