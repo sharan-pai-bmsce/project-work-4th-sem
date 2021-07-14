@@ -68,7 +68,10 @@ news.forEach((selected) => {
 let announceDisplayFunction = (a) => {
   document.querySelector(
     "#announce-display"
-  ).style = `border: 1px solid black;`;
+  ).style = `border: 1px solid black;background-color:white;`;
+  document.querySelector(
+    "#announce-display"
+  ).classList = `announce-display row`;
   document.querySelector("#announce-area").style = ``;
   $("#img-area").html(
     `<img src="${a.image_url}" class="img-fluid" style='height:inherit;object-fit: contain;'>`

@@ -7,7 +7,7 @@
     <title>2020 Conference</title>
     <link rel="stylesheet" href="../public/css/style-home-user.css">
   </head>
-  <body style="background-color: white">
+  <body>
   <?php 
     require('include/navbar-user.php');
   ?>
@@ -73,7 +73,7 @@
     <h1 class="h-primary center">Updates</h1>
     <div id="update">
       <div style="margin-bottom: 50px;"></div>
-      <div class="announce-display row" id="announce-display">
+      <div class="announce-display row" id="announce-display" style='display:none;'>
           <div id="img-area" class="col-md-5" style="padding-left:0px;"></div>
           <div id="announce-area" class="announce-area col-md-7 p-2"></div>
       </div>
