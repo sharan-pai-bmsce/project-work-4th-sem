@@ -4,20 +4,6 @@ require('config/database.php');
 require('include/header.php');
 $path = '/views/index-submission.php';
 $title = 'Submission Page';
-session_start();
-$sql = "SELECT DISTINCT conf_name FROM announcement;";
-$query = mysqli_query($conn, $sql);
-$row1 = mysqli_fetch_all($query, MYSQLI_ASSOC);
-$sql = "SELECT DISTINCT topic_of_discussion FROM announcement;";
-$query = mysqli_query($conn, $sql);
-$row2 = mysqli_fetch_all($query, MYSQLI_ASSOC);
-$sql = "SELECT conf_name,topic_of_discussion FROM announcement;";
-$query = mysqli_query($conn, $sql);
-$row3 = mysqli_fetch_all($query, MYSQLI_ASSOC);
-$sql = "Select ptitle from submission where usn='$_SESSION[usn]';";
-$query = mysqli_query($conn, $sql);
-$row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
-$stat = 0;
 ?>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
@@ -26,10 +12,22 @@ $stat = 0;
 <link rel="stylesheet" href="../public/css/style-submission.css" />
 </head>
 
-<body style="background-color: #ddd">
+<body>
   <?php
   require('include/navbar-user.php');
-
+  $sql = "SELECT DISTINCT conf_name FROM announcement;";
+  $query = mysqli_query($conn, $sql);
+  $row1 = mysqli_fetch_all($query, MYSQLI_ASSOC);
+  $sql = "SELECT DISTINCT topic_of_discussion FROM announcement;";
+  $query = mysqli_query($conn, $sql);
+  $row2 = mysqli_fetch_all($query, MYSQLI_ASSOC);
+  $sql = "SELECT conf_name,topic_of_discussion FROM announcement;";
+  $query = mysqli_query($conn, $sql);
+  $row3 = mysqli_fetch_all($query, MYSQLI_ASSOC);
+  $sql = "Select ptitle from submission where usn='$_SESSION[usn]';";
+  $query = mysqli_query($conn, $sql);
+  $row4 = mysqli_fetch_all($query, MYSQLI_ASSOC);
+  $stat = 0;
   ?>
   <div class="container pl-3 pr-3 pt-2" style="background-color: #eee">
     <div id="msg-div" class="mt-3 mb-3">
@@ -47,11 +45,11 @@ $stat = 0;
         $confName = mysqli_real_escape_string($conn, $_POST['conference-name']);
         $topic = mysqli_real_escape_string($conn, $_POST['topic-of-discussion']);
         foreach ($row3 as $key => $value) {
-          echo "$value[conf_name], $value[topic_of_discussion]";
-          echo "$confName, $topic";
+          // echo "$value[conf_name], $value[topic_of_discussion]";
+          // echo "$confName, $topic";
           if ($value['conf_name'] == $confName) {
-            if($value['topic_of_discussion'] == $topic){
-              echo "world";
+            if ($value['topic_of_discussion'] == $topic) {
+              // echo "world";
               $stat = 1;
             }
           }
@@ -107,9 +105,9 @@ $stat = 0;
             }
           }
         }
-        echo $stat;
+        // echo $stat;
       }
-     
+
       // echo "$stat    ".$_POST['conference-name']."               ".$_POST['topic-of-discussion'] 
       ?>
       <h3 class="text-center author" style="padding-top: 0px;">Author's Information</h3>
@@ -132,7 +130,7 @@ $stat = 0;
             <?php
             echo "<option value=''>Select a Conference Name</option>";
             foreach ($row1 as $prop => $val) {
-              
+
               echo ("<option");
               if (isset($_POST['conference-name']) && $_POST['conference-name'] == $val['conf_name']) {
                 if ($stat != 1)
@@ -235,6 +233,7 @@ $stat = 0;
     </form>
 
     <script src="../public/js/main-submission.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <?php
     //var_dump($_SESSION);
     function test_input($data)
@@ -251,10 +250,28 @@ $stat = 0;
         $x = str_replace("\n", "", $x);
 
         $sql = "INSERT INTO submission(usn,conf_name,topic,co_authors,ptitle,abstract,file_name,file_size,plag_percent,plag_file) VALUES ('$usn','$confName','$topic','$coAuthor','$paperTitle','$paperAbstract','$filename',$filesize,'$x','$filename1');";
-        echo "$sql";
         if (move_uploaded_file($file, $destination)) {
-          if (mysqli_query($conn, $sql))
-            echo "<script> success(); </script>";
+          // echo $sql;
+          if (mysqli_query($conn, $sql)) {
+            // // the message
+            // $msg = "First line of text\nSecond line of text";
+
+            // // use wordwrap() if lines are longer than 70 characters
+            // $msg = wordwrap($msg, 70);
+
+            // // send email
+            // mail("shashanksharma.cs19@bmsce.ac.in", "My subject", $msg);
+            echo "<script>
+            swal({
+              title: 'Paper has been submitted!',
+              text: 'You will get an update about your submission in 2-3 days on the feedback page!',
+              icon: 'success',                          
+            });
+            </script>";
+          } else {
+            $error = mysqli_error($conn);
+            echo $error;
+          }
         }
         // } else {
         // }
@@ -267,7 +284,7 @@ $stat = 0;
       } else if ($stat == 5) {
         echo "<script>linkError();</script>";
       } else {
-        
+
         echo "<script>confError();</script>";
       }
     }
