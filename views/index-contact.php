@@ -15,12 +15,13 @@ $row = mysqli_fetch_all($result,MYSQLI_ASSOC);
 <link rel="stylesheet" href="../public/css/style-contact.css">
 </head>
 
-<body style="background-color: #ddd">
+<body>
   <?php
   require('include/navbar-user.php');
   ?>
   <div class="container pl-3 pr-3 pt-2" style="margin-top: 200px;background-color: #eee">
     <?php 
+    $count=0;
     foreach ($row as $key => $value) {
       echo "<div class='border border-dark p-3 rounded mb-2'>
       <h5><b>From: </b>$value[from_email]</h5>
@@ -31,8 +32,12 @@ $row = mysqli_fetch_all($result,MYSQLI_ASSOC);
       <h5>$value[reco]</h5>
       </div>
       ";
+      $count++;
     }
-      
+      if($count==0){
+        echo "<h3 class='text-center pt-3 pb-3'>No Feedbacks yet!!!</h3>";
+        echo "<img style='margin-left:42.5%;' class='mb-3' src='../public/assets/empty-notification.jpeg'>";
+      }
     ?>
   </div>
   <div style="margin-bottom: 50px;"></div>

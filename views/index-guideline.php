@@ -9,7 +9,7 @@
   <?php
     require('include/navbar-user.php');
   ?>
-  <body style="background-color: #ddd">
+  <body>
     <div style="background-color:#EEE" class="p-3 container">
       <ul><h4 style="text-align:center;">PLEASE MAKE A NOTE</h4>
       <li>Before submitting your paper please ensure that it has been carefully read for typographical and grammatical errors.</li>

@@ -6,7 +6,7 @@
     <title>INFORMATION PAGE</title>
     <link rel="stylesheet" href="../public/css/style-info.css">
   </head>
-  <body style="background-color: #ddd">
+  <body>
   <?php
     require('include/navbar-user.php');
   ?>
