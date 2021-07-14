@@ -11,7 +11,7 @@ if (isset($_POST['Logout'])) {
 }
 ?>
 <div class="header">
-  <div class="navbar align-items-center pl-3 pr-3" style="background-color: #ddd;">
+  <div class="navbar align-items-center pl-3 pr-3" id='head' style="background-color: #eee;">
     <div class="col-3 pt-2">
       <img src="https://upload.wikimedia.org/wikipedia/en/thumb/8/87/BMS_College_of_Engineering.svg/1200px-BMS_College_of_Engineering.svg.png" width="100px" height="100px" />
     </div>
@@ -27,7 +27,7 @@ if (isset($_POST['Logout'])) {
     </div>
   </div>
   <div>
-    <nav class="mt-3 navigate navbar navbar-expand-lg pt-2 pb-2 navbar-dark bg-dark">
+    <nav class="mt-3 navigate navbar navbar-expand-lg pt-2 pb-2 navbar-dark bg-dark" id='navigate-div'>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -74,3 +74,17 @@ if (isset($_POST['Logout'])) {
     </nav>
   </div>
 </div>
+<script>
+  let nave = document.getElementById('navigate-div');
+  document.addEventListener('scroll', (e) => {
+    if (window.pageYOffset > 60) {
+        console.log(window.pageYOffset);
+        document.getElementById('head').style = 'top:-120px;'
+        nave.style = 'top:-20px;';
+
+    } else {
+        document.getElementById('head').style = 'top:0px;background-color: #eee;'
+        document.getElementById('navigate-div').style = 'top:105px;';
+    }
+  });
+</script>
