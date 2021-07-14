@@ -19,7 +19,7 @@ $row = mysqli_fetch_all($result,MYSQLI_ASSOC);
   <?php
   require('include/navbar-user.php');
   ?>
-  <div class="container pl-3 pr-3 pt-2" style="margin-top: 200px;background-color: #eee">
+  <div class="container p-3" style="margin-top: 200px;background-color: #eee">
     <?php 
     $count=0;
     foreach ($row as $key => $value) {

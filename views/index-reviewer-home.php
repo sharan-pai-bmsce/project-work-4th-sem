@@ -25,14 +25,17 @@ $title = 'Reviewer Home';
     $sql = "SELECT conf_name,topic,pid,ptitle,abstract,status FROM submission where (conf_name,topic) IN (SELECT conf_name,topic_of_discussion FROM announcement WHERE rid='$_SESSION[reviewer_id]');";
     $result = mysqli_query($conn, $sql);
     $row2 = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    print_r($row2);
+    // print_r($row2);
     $x = json_encode($row2);
     ?>
+    
     <?php
     foreach ($row1 as $key1 => $value1) {
       echo "<h2 class='text-center pt-3 pb-3'>$value1[conf_name] --  $value1[topic_of_discussion]</h2>";
+      $count = 0;
       foreach ($row2 as $key => $value) {
         if ($value['conf_name'] == $value1['conf_name'] && $value1['topic_of_discussion'] == $value['topic']) {
+          $count++;
           echo "<div class='border border-dark p-3 rounded mb-2'>
                 <h5><b>Paper Id: </b>$value[pid]</h5>
                 <h5><b>Paper Title: </b>$value[ptitle]</h5>
@@ -50,6 +53,10 @@ $title = 'Reviewer Home';
               </div>";
           }
         }
+      }
+      if ($count == 0) {
+        echo "<h3 class='text-center pt-3 pb-3'>No Submissions yet!!!</h3>";
+        echo "<img style='margin-left:42.5%;' class='mb-3' src='../public/assets/empty-notification.jpeg'>";
       }
     }
 
