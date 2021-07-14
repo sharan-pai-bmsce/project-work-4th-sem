@@ -26,17 +26,6 @@ if (isset($_GET['pid'])) {
 <body style="background-color: #ccc;">
     <?php
     //echo "$sql";
-    if (isset($_POST['Accept'])) {
-        //var_dump($_POST);
-        $pid = mysqli_real_escape_string($conn, $row1['pid']);
-        $sql = "UPDATE submission SET status=1 where pid=$pid;";
-        $result = mysqli_query($conn, $sql);
-        $sql = "INSERT INTO feedback VALUE ('$row2[email]','$row1[email]','$row1[ptitle]','Your paper has been Accepted','Congratulations!! Your paper has been accepted. It will be presented during the conference. Kindly be there in time. Further info will be given to you through mail.','$row1[conf_name]','$row1[topic]')";
-        $result = mysqli_query($conn, $sql);
-        if ($result) {
-            header("location:index-user.php?pid=$row1[pid]");
-        }
-    }
     if (isset($_GET['file'])) {
         $filename = mysqli_real_escape_string($conn, $_GET['file']);
         echo $filename;
@@ -60,12 +49,12 @@ if (isset($_GET['pid'])) {
     } ?>
     <div class="container mt-4 p-3" style="background-color: #eee;">
         <?php
-    // echo "$sql";
-    //var_dump($row1);
-    //   echo "<div class></div>";
-    //   var_dump($row2);
+        // echo "$sql";
+        //var_dump($row1);
+        //   echo "<div class></div>";
+        //   var_dump($row2);
         ?>
-        
+
         <div class="form-row pr-4 pl-4">
             <h1 class="text-left col-md-6 pt-4 mt-1" style="font-family: cursive;"><b>Author: </b> <?php echo "$row1[first_name] $row1[last_name]"; ?> </h1>
             <section class="col-md-6">
@@ -109,7 +98,7 @@ if (isset($_GET['pid'])) {
             ?>
 
         </div>
-        
+
         <div class="form-row mb-4 mt-4 pl-3 pr-3">
             <h4 class="col-md-6"><b>File: </b><a class="link-dark" href="index-user.php?pid=<?php echo "$row1[pid]"; ?>&&file=<?php echo "$row1[file_name]"; ?>"><?php echo "$row1[file_name]"; ?></a></h4>
             <h4 class="col-md-6"><b>Plagiarism Report: </b><a class="link-dark" href="index-user.php?pid=<?php echo "$row1[pid]"; ?>&&file=<?php echo "$row1[plag_file]"; ?>"><?php echo "$row1[plag_file]"; ?></a></h4>
@@ -117,13 +106,13 @@ if (isset($_GET['pid'])) {
         <br>
         <hr>
         <div class='text-center'>
-        <?php if ($row1['status'] == 0) {?>
-            <form action="<?php echo "$_SERVER[PHP_SELF]?pid=$row1[pid]" ?>" method='POST' style='display:contents;'>
-                <button name='Accept' class='btn btn-success m-2' style='padding-left:12%;padding-right:12%;'>Accept</button>
-            </form>
-            <button name='Reject' id='reject' class='btn btn-danger m-2' style='padding-left:12%;padding-right:12%;' data-bs-toggle='modal' data-bs-target='#staticBackdrop'>Reject</button>
+            <?php if ($row1['status'] == 0) { ?>
+                <form action="<?php echo "$_SERVER[PHP_SELF]?pid=$row1[pid]" ?>" method='POST' style='display:contents;'>
+                    <button name='Accept' class='btn btn-success m-2' style='padding-left:12%;padding-right:12%;'>Accept</button>
+                </form>
+                <button name='Reject' id='reject' class='btn btn-danger m-2' style='padding-left:12%;padding-right:12%;' data-bs-toggle='modal' data-bs-target='#staticBackdrop'>Reject</button>
         </div>
-        <?php }?>
+    <?php } ?>
     </div>
     <div class="m-4 p-4"></div>
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -180,27 +169,43 @@ function test_input($data)
     $data = htmlspecialchars($data);
     return $data;
 }
+if (isset($_POST['Accept'])) {
+    //var_dump($_POST);
+    $pid = mysqli_real_escape_string($conn, $row1['pid']);
+    $sql = "UPDATE submission SET status=1 where pid=$pid;";
+    $result = mysqli_query($conn, $sql);
+    $sql = "INSERT INTO feedback VALUE ('$row2[email]','$row1[email]','$row1[ptitle]','Your paper has been Accepted','Congratulations!! Your paper has been accepted. It will be presented during the conference. Kindly be there in time. Further info will be given to you through mail.','$row1[conf_name]','$row1[topic]')";
+    $result = mysqli_query($conn, $sql);
+    if ($result) {
+        echo '<script>
+        window.opener.location.reload();
+        window.reload();
+        </script>';
+        // header("location:index-user.php?pid=$row1[pid]");
+    }
+}
 if (isset($_POST['Send'])) {
     var_dump($_POST);
     $from = test_input(mysqli_real_escape_string($conn, $row2['email']));
     $to = test_input(mysqli_real_escape_string($conn, $row1['email']));
     $pid = $row1['pid'];
     $ptitle = test_input(mysqli_real_escape_string($conn, $row1['ptitle']));
-    $conference = test_input(mysqli_real_escape_string($conn, "$row1[conf_name]-$row1[topic]"));
+    $conference = mysqli_real_escape_string($conn, "$row1[conf_name]");
+    $topic = mysqli_real_escape_string($conn, "$row1[topic]");
     $subject = test_input(mysqli_real_escape_string($conn, $_POST['subject']));
     $suggestion = test_input(mysqli_real_escape_string($conn, $_POST['reco']));
-    if (unlink("Uploads/$row1[file_name]")) {
-        $sql = "INSERT INTO feedback(from_email,to_email,ptitle,subject,reco,conference) value ('$from','$to','$ptitle','$subject','$suggestion','$conference');";
+    if (unlink("Uploads/$row1[file_name]") && unlink("Uploads/$row1[plag_file]")) {
+        $sql = "INSERT INTO feedback(from_email,to_email,ptitle,subject,reco,conference,topic) value ('$from','$to','$ptitle','$subject','$suggestion','$conference','$topic');";
         echo $sql;
         $result = mysqli_query($conn, $sql);
-        echo "$result";
+        // echo "$result";
         $sql = "DELETE from submission where pid=$pid;";
         $result = mysqli_query($conn, $sql);
         echo '<script>
             window.opener.location.reload();
             window.close();
             </script>';
-    }else{
+    } else {
         echo "Error";
     }
 
