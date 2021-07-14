@@ -67,10 +67,10 @@ if (isset($_POST['Logout'])) {
                               } ?>">
             <a class="nav-link <?php if ($path == '/views/index-contact.php') {
                                   echo ('bg-danger pr-2 pl-2');
-                                } ?>" style="border-radius: 2px" href="../views/index-contact.php">Contact-us</a>
+                                } ?>" style="border-radius: 2px" href="../views/index-contact.php">Inbox</a>
           </li>
         </ul>
-      </div>
+      </div> 
     </nav>
   </div>
 </div>

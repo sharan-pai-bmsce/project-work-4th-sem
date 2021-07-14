@@ -1,7 +1,7 @@
 <div class="header">
     <?php
     session_start();
-    if(!$_SESSION['logged_in']){
+    if (!$_SESSION['logged_in']) {
         header('location: ../views/index-login.php');
     }
     if (isset($_POST['Logout'])) {
@@ -39,19 +39,23 @@
                                         } ?>">
                         <a class="nav-link <?php if ($path == '/views/index-admin-home.php') {
                                                 echo ('bg-danger pr-2 pl-2');
-                                            } ?>" style="border-radius: 2px" href="../views/index-admin-home.php">HOME</a>
+                                            }else{echo('pr-2 pl-2');} ?>" style="border-radius: 2px" href="../views/index-admin-home.php">Home</a>
                     </li>
                     <li class="nav-item <?php if ($path == '/views/index-admin-registration.php') {
                                             echo ('active');
                                         } ?>">
                         <a class="nav-link <?php if ($path == '/views/index-admin-registration.php') {
                                                 echo ('bg-danger pr-2 pl-2');
-                                            } ?>" style="border-radius: 2px" href="../views/index-admin-registration.php">REVIEWER REGISTRATION</a>
+                                            }else{echo('pr-2 pl-2');} ?>" style="border-radius: 2px" href="../views/index-admin-registration.php">Reviewer Registration</a>
                     </li>
-                    <li class="nav-item <?php if ($path == '/views/index-admin-registration.php') {
+                    <li class="nav-item <?php if ($path == '/views/index-admin-submission.php') {
                                             echo ('active');
                                         } ?>">
-                      
+                        <a class="nav-link <?php if ($path == '/views/index-admin-submission.php') {
+                                                echo ('bg-danger pr-2 pl-2');
+                                            }else{echo('pr-2 pl-2');} ?>" style="border-radius: 2px" href="../views/index-admin-submission.php">Submissions</a>
+
+
                     </li>
                 </ul>
             </div>
@@ -59,16 +63,16 @@
     </div>
 </div>
 <script>
-  let nave = document.getElementById('navigate-div');
-  document.addEventListener('scroll', (e) => {
-    if (window.pageYOffset > 60) {
-        console.log(window.pageYOffset);
-        document.getElementById('head').style = 'top:-120px;'
-        nave.style = 'top:-20px;';
+    let nave = document.getElementById('navigate-div');
+    document.addEventListener('scroll', (e) => {
+        if (window.pageYOffset > 60) {
+            console.log(window.pageYOffset);
+            document.getElementById('head').style = 'top:-120px;'
+            nave.style = 'top:-20px;';
 
-    } else {
-        document.getElementById('head').style = 'top:0px;background-color:white;'
-        document.getElementById('navigate-div').style = 'top:105px;';
-    }
-  });
+        } else {
+            document.getElementById('head').style = 'top:0px;background-color:white;'
+            document.getElementById('navigate-div').style = 'top:105px;';
+        }
+    });
 </script>
