@@ -101,6 +101,7 @@ $title = 'Submission Page';
             } else if (strpos($text, "R EP O RT")) {
               $x = substr($text, strpos($text, "R EP O RT") + 13, 7);
             } else {
+              unlink($destination1);
               $stat = 5;
             }
           }

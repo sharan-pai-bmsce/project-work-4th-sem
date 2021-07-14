@@ -10,7 +10,8 @@ if (isset($_GET['pid'])) {
     $sql = "SELECT u.first_name,u.last_name,u.email,u.nationality,u.institution,u.mob_no,u.address,s.pid,s.ptitle,s.abstract,s.conf_name,s.topic,s.co_authors,s.file_name,s.file_size,s.status,s.plag_file,s.plag_percent FROM submission s,users u where s.usn=u.usn AND pid=$_GET[pid];";
     $result = mysqli_query($conn, $sql);
     $row1 = mysqli_fetch_array($result, MYSQLI_ASSOC);
-    if (array_search('reviewer_id',$_SESSION)) {
+    $row2=null;
+    if (array_key_exists('reviewer_id',$_SESSION)) {
         $sql = "SELECT email FROM reviewer WHERE rid='$_SESSION[reviewer_id]';";
         $result = mysqli_query($conn, $sql);
         $row2 = mysqli_fetch_array($result, MYSQLI_ASSOC);
