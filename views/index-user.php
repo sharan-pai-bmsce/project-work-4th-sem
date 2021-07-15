@@ -164,6 +164,7 @@ if (isset($_GET['pid'])) {
         </div>
     </div>
 </body>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <?php
 function test_input($data)
 {
@@ -180,10 +181,16 @@ if (isset($_POST['Accept'])) {
     $sql = "INSERT INTO feedback VALUE ('$row2[email]','$row1[email]','$row1[ptitle]','Your paper has been Accepted','Congratulations!! Your paper has been accepted. It will be presented during the conference. Kindly be there in time. Further info will be given to you through mail.','$row1[conf_name]','$row1[topic]')";
     $result = mysqli_query($conn, $sql);
     if ($result) {
-        echo '<script>
-        window.opener.location.reload();
-        window.reload();
-        </script>';
+        echo "<script>
+        swal({
+            title: 'Paper has been Accepted!',
+            text: '',
+            icon: 'success',                          
+          }).then(()=>{
+              window.opener.location.reload();
+              window.close();
+          });
+        </script>";
         // header("location:index-user.php?pid=$row1[pid]");
     }
 }

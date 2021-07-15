@@ -13,7 +13,7 @@ $email=mysqli_real_escape_string($conn,$_POST['email']);
 $publication_name=mysqli_real_escape_string($conn,$_POST['publication_name']);
 $password=mysqli_real_escape_string($conn,$_POST['password']);
 
-$query="INSERT INTO `reviewer`(`rid`,`name`,`email`,`pass`,`publication_name`,`registered_by`) Values('$RID','$Name','$email','$password','$publication_name','$registered_by')";
+$query="INSERT INTO `reviewer`(`rid`,`name`,`email`,`pass`,`publication_name`,`registering_dept`) Values('$RID','$Name','$email','$password','$publication_name','$registered_by')";
 $stat=0;
 if(mysqli_query($conn,$query))
 { $stat=1;
@@ -34,8 +34,8 @@ if(mysqli_query($conn,$query))
     
       <div class="container">
         
-          <div class="row no-gutters">
-           <div class="col-md-8">
+          <div class="row no-gutters text-center">
+           <div class="col-md-8" style='margin:auto;'>
             <div class="card-body text-center">
                 <div class="" id="user-signin">
                   <p class="login-card-description"><h3>Register a Reviewer</h3></p>
@@ -75,8 +75,8 @@ if(mysqli_query($conn,$query))
                         name="registered_by"
                         id="registered_by"
                         class="form-control"
-                        placeholder="Enter the name of the registering person"
-                        value=""
+                        placeholder="Enter the name of the registering dept"
+                        value="<?php echo "$_SESSION[admin_dept]"?>"
                         required
                         pattern="[a-z A-Z]{2,}"
                       />

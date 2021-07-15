@@ -88,7 +88,6 @@
   <?php 
     $date = date('Y-m-d');
     $sql = "SELECT file_name,plag_file from submission WHERE (conf_name,topic) in (SELECT conf_name,topic_of_discussion FROM announcement where date_of_conf<'$date');";
-    echo $sql;
     $result = mysqli_query($conn,$sql);
     $row = mysqli_fetch_all($result,MYSQLI_ASSOC);
     foreach ($row as $key => $value) {
@@ -98,7 +97,6 @@
       echo "Deleted $value[plag_file]";
     }
     $sql = "DELETE from announcement where date_of_conf<'$date'";
-    echo $sql;
     $result = mysqli_query($conn,$sql);
     $sql = "SELECT a.conf_name,a.topic_of_discussion,a.summary,a.date_of_conf,a.last_date_sub,a.image_url,a.dept,r.name,r.publication_name FROM announcement a,reviewer r where a.rid=r.rid;";
     $result = mysqli_query($conn,$sql);

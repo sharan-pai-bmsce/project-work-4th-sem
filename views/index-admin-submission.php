@@ -6,7 +6,7 @@ $title = 'Submissions Page';
 ?>
 
 <link rel="stylesheet" href="../public/css/style-admin-submission.css">
-<title>Feedback Page</title>
+<title>Submissions Page</title>
 </head>
 
 <body style="background-color: white">
